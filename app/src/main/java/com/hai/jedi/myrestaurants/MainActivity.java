@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         mLocationEditText = findViewById(R.id.editLocationText);
 
         // Our Button
-        mFindRestaurantsButton = (Button) findViewById(R.id.findRestaurantsButton);
+        mFindRestaurantsButton = findViewById(R.id.findRestaurantsButton);
 
         // We add a listener to our button so that we can make it do something when it is clicked.
         mFindRestaurantsButton.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +80,14 @@ public class MainActivity extends AppCompatActivity {
                  * */
                 Intent restaurant_activity_intent = new Intent(
                         MainActivity.this, RestaurantsActivity.class);
+
+                /**
+                 *  Here we pass location data to the RestaurantActivity by calling  the putExtra
+                 *  method on restaurant_activity_intent.
+                 *
+                 *  putExtra stores the information in a hash-map like, key value pair.
+                 * */
+                restaurant_activity_intent.putExtra("location_data", location);
                 startActivity(restaurant_activity_intent);
             }
         });
