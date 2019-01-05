@@ -4,6 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +27,24 @@ public class MainActivity extends AppCompatActivity {
         // Example of a call to a native method
         TextView tv = (TextView) findViewById(R.id.sample_text);
         tv.setText(stringFromJNI());
+
+        /**
+         * Assigning our button in xml to our var mFindRestaurantButton.
+         * We do this by getting the id we assigned to our Button.
+         * findViewById returns a generic View type, so we have to type cast it because our var is
+         * of type Button*/
+
+        mFindRestaurantsButton = (Button) findViewById(R.id.findRestaurantsButton);
+
+        // We add a listener to our button so that we can make it do something when it is clicked.
+        mFindRestaurantsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "Hello World", Toast.LENGTH_LONG)
+                .show();
+
+            }
+        });
 
 
     }
