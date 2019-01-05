@@ -2,11 +2,15 @@ package com.hai.jedi.myrestaurants;
 
 import android.content.Intent;
 
+import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.TextView;
 import android.view.View;
+
+import android.widget.Button;
+import android.widget.EditText;
+
+import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +30,14 @@ public class MainActivity extends AppCompatActivity {
      * All other activities terminate in a cascade from within the main activity.
      * */
 
+
+    // Had not seen this. Had to initialize tag here.
+    public static final String TAG = MainActivity.class.getSimpleName();
+
+    // Initializing our button
     private Button mFindRestaurantsButton;
+    // Initializing our Input variable
+    private EditText mLocationEditText;
 
     // Used to load the 'native-lib' library on application startup.
     static {
@@ -41,17 +52,25 @@ public class MainActivity extends AppCompatActivity {
         // R is short for resources. In this case we are using activity_main.xml
         setContentView(R.layout.activity_main);
 
+        // User Input
+        mLocationEditText = findViewById(R.id.editLocationText);
 
+        // Our Button
         mFindRestaurantsButton = (Button) findViewById(R.id.findRestaurantsButton);
 
         // We add a listener to our button so that we can make it do something when it is clicked.
         mFindRestaurantsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // An intent represents something our app "intends to do" by describing a simple
-                // action we want the our app to perform.
+
+                String location = mLocationEditText.getText().toString();
+                Log.d(TAG, location);
+
                 /**
-                 * Most oftern, an intent is used to start another activity or hand something
+                 * An intent represents something our app "intends to do" by describing a simple
+                 * action we want the our app to perform.
+                 *
+                 * Most often, an intent is used to start another activity or hand something
                  * over to another app.
                  *
                  * So here we create an intent called "restaurant_activity_intent" which will
