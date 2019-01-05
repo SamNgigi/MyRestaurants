@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
@@ -42,23 +41,6 @@ public class MainActivity extends AppCompatActivity {
         // R is short for resources. In this case we are using activity_main.xml
         setContentView(R.layout.activity_main);
 
-        // Example of a call to a native method
-        /**
-         * This method below was responsible for displaying the text "Hello from C++"
-         *
-         * TextView tv = (TextView) findViewById(R.id.sample_text);
-         *
-         * At the very bottom of file you can find where the stringFromJNI() is defined
-         *
-         * tv.setText(stringFromJNI());
-         * */
-
-        /**
-         * Assigning our button in xml to our var mFindRestaurantButton.
-         * 
-         * We do this by getting the id we assigned to our Button.
-         * findViewById returns a generic View type, so we have to type cast it because our var is
-         * of type Button*/
 
         mFindRestaurantsButton = (Button) findViewById(R.id.findRestaurantsButton);
 
@@ -66,18 +48,24 @@ public class MainActivity extends AppCompatActivity {
         mFindRestaurantsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Hello World", Toast.LENGTH_LONG)
-                .show();
-
+                // An intent represents something our app "intends to do" by describing a simple
+                // action we want the our app to perform.
+                /**
+                 * Most oftern, an intent is used to start another activity or hand something
+                 * over to another app.
+                 *
+                 * So here we create an intent called "restaurant_activity_intent" which will
+                 * instruct the startActivity method to navigate us to the RestaurantActivity.
+                 *
+                 * This intent will be triggered by a click event on our findRestaurantButton.
+                 * */
+                Intent restaurant_activity_intent = new Intent(
+                        MainActivity.this, RestaurantsActivity.class);
+                startActivity(restaurant_activity_intent);
             }
         });
 
 
     }
 
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
-   /* public native String stringFromJNI();*/
 }
