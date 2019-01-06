@@ -3,6 +3,7 @@
     <string name="hello">This is awesome! Pretty Dope!</string>
     <string name="btn1_text">Find Restaurants</string>
     <string name="img_desc">Mine</string>
+    <string name="input_text">Enter Zip Code</string>
 
     <string name="rest_act">Restaurants near</string>
 </resources>

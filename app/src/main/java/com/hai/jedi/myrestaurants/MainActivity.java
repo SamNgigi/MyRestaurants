@@ -2,7 +2,6 @@ package com.hai.jedi.myrestaurants;
 
 import android.content.Intent;
 
-import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -40,9 +39,9 @@ public class MainActivity extends AppCompatActivity {
     private EditText mLocationEditText;
 
     // Used to load the 'native-lib' library on application startup.
-    static {
+    /*static {
         System.loadLibrary("native-lib");
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
