@@ -40,11 +40,21 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      *  Had to comment this out because of this error when doing tests
-     *  "java.lang.UnsatisfiedLinkError: no native-lib in java.library.path"*/
+     *  "java.lang.UnsatisfiedLinkError: no native-lib in java.library.path"
+     *  "java.lang.NoClassDefFoundError: Could not initialize class com.hai.jedi.myrestaurants.MainActivity"
+     *
+     *  Uncommented the loading of "native-lib". The errors we because we have
+     *  to load the native-lib in a try/catch block for it to work.
+     *  */
     // Used to load the 'native-lib' library on application startup.
-    /*static {
-        System.loadLibrary("native-lib");
-    }*/
+    protected void loadNativeLibraries() {
+        try {
+            System.loadLibrary("native-lib");
+        } catch (UnsatisfiedLinkError error){
+            String error_string = "STILL HAVE THIS ERROR: " + error;
+            Log.d(TAG, error_string);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
