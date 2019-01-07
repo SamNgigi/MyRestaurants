@@ -38,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
     // Initializing our Input variable
     private EditText mLocationEditText;
 
+    /**
+     *  Had to comment this out because of this error when doing tests
+     *  "java.lang.UnsatisfiedLinkError: no native-lib in java.library.path"*/
     // Used to load the 'native-lib' library on application startup.
     /*static {
         System.loadLibrary("native-lib");
