@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <!--<color name="colorPrimary">#008577</color>-->
+    <color name="colorPrimary">#FF5722</color>
+    <!--<color name="colorPrimaryDark">#00574B</color>-->
+    <color name="colorPrimaryDark">#E64A19</color>
     <color name="colorAccent">#D81B60</color>
     <color name="primary">#FF5722</color>
     <color name="primaryDark">#E64A19</color>
@@ -12,5 +14,6 @@
     <color name="secondaryText">#727272</color>
     <color name="colorDivider">#B6B6B6</color>
     <color name="btn1">#721817</color>
-    <color name="btn2">#FA9F42</color>
+    <!--<color name="btn2">#FA9F42</color>-->
+    <color name="btn2">#008577</color>
 </resources>

@@ -11,6 +11,10 @@ import android.widget.EditText;
 
 import android.util.Log;
 
+import android.widget.TextView;
+
+import android.graphics.Typeface;
+
 public class MainActivity extends AppCompatActivity {
 
     /**
@@ -33,8 +37,12 @@ public class MainActivity extends AppCompatActivity {
     // Had not seen this. Had to initialize tag here.
     public static final String TAG = MainActivity.class.getSimpleName();
 
+    // Welcome text
+    private TextView welcomeText;
+
     // Initializing our button
     private Button mFindRestaurantsButton;
+
     // Initializing our Input variable
     private EditText mLocationEditText;
 
@@ -63,6 +71,15 @@ public class MainActivity extends AppCompatActivity {
         // Method below tells activity which layout to use for main screen.
         // R is short for resources. In this case we are using activity_main.xml
         setContentView(R.layout.activity_main);
+
+        // Setting a fonts to our text on the MainActivity
+        welcomeText = findViewById(R.id.sample_text);
+        // Getting our font
+        Typeface ostrich_font = Typeface.createFromAsset(
+                               getAssets(), "fonts/ostrich-regular.ttf");
+        // Setting our font at runtime.
+        welcomeText.setTypeface(ostrich_font);
+
 
         // User Input
         mLocationEditText = findViewById(R.id.editLocationText);

@@ -20,7 +20,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hello"
-        android:textColor="@color/textIcons" />
+        android:textColor="@color/textIcons"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        android:textSize="60sp"
+        android:textStyle="bold"/>
 
     <EditText
         android:id="@+id/editLocationText"
@@ -38,11 +43,11 @@
 
     <Button
         android:id="@+id/findRestaurantsButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/btn1_text"
         android:background="@color/btn2"
-        android:textColor="@color/primaryLight"
+        android:textColor="@color/textIcons"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:padding="10dp" />
