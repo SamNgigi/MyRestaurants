@@ -40,6 +40,14 @@ public class RestaurantsActivity extends AppCompatActivity {
     // launched
         mLocationTextView = findViewById(R.id.locationInfo);
 
+    /**
+     * So basically what an ArrayAdapter does is that it parses data from our Array to our ListView
+     * in the format of our choosing. It can be a simple list, drop down, or any other option of
+     * list.
+     *
+     * In other words it is responsible for taking an ArrayList of objects from our business logic
+     * and converts them into View objects to be displayed in our User interface.
+     * */
     // Our ArrayAdapter
         ArrayAdapter adapter = new ArrayAdapter(
                        this, android.R.layout.simple_list_item_1, restaurants);
@@ -67,3 +75,28 @@ public class RestaurantsActivity extends AppCompatActivity {
         mLocationTextView.setText("Here are all the restaurants near: " + location + ".");
     }
 }
+
+/**
+ * NOTES ON ADAPTERS.
+ *
+ * ADAPTER
+ * - Essentially a bridge between components of our UI and data from our backend to be displayed in
+ * the UI.
+ *
+ * ARRAY ADAPTER
+ * - Responsible for taking ArrayList objects from backend and converting them to View objects to be
+ * displayed.
+ *
+ * RECYCLING.
+ * - This is the act of an Adapter re-using individual Views of a ListView as user scrolls through
+ * list. After the ListView has created enough individual list items to fit the full height of the
+ * screen, it simply re-uses existing list items to display the new list items instead of creating
+ * more.
+ *
+ * SCRAP-VIEWS.
+ * - This is a View that leaves the screen while scrolling but is kept in memory, to be re-used to
+ * display other items of data, during the recycling process.
+ *
+ * */
+
+
