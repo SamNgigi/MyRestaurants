@@ -12,24 +12,24 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:contentDescription="@string/img_desc"
-        android:src="@drawable/mine"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:src="@drawable/my_restaurant" />
 
     <TextView
         android:id="@+id/sample_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello"
-        android:textColor="@color/textIcons"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="35dp"
-        android:textSize="60sp"
-        android:textStyle="bold"/>
+        android:layout_marginTop="155dp"
+        android:text="@string/hello"
+        android:textColor="@color/textIcons"
+        android:textSize="55sp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/editLocationText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/findRestaurantsButton"
         android:layout_centerHorizontal="true"
@@ -37,20 +37,21 @@
         android:background="@color/textIcons"
         android:ems="10"
         android:hint="@string/input_text"
+        android:importantForAutofill="no"
         android:inputType="text"
         android:padding="5dp"
-        android:importantForAutofill="no" tools:targetApi="o"/>
+        tools:targetApi="o" />
 
     <Button
         android:id="@+id/findRestaurantsButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/btn1_text"
-        android:background="@color/btn2"
-        android:textColor="@color/textIcons"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:padding="10dp" />
+        android:background="@color/btn2"
+        android:padding="10dp"
+        android:text="@string/btn1_text"
+        android:textColor="@color/textIcons" />
 
 
 </RelativeLayout>
