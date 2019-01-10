@@ -16,8 +16,12 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import android.util.Log;
 
 public class RestaurantsActivity extends AppCompatActivity {
+    // Logging Constant for debugging
+    public static final String TAG = RestaurantsActivity.class.getSimpleName();
+
     // Var that stores view we will display the welcome data.
     // private TextView mLocationTextView;
     @BindView(R.id.locationInfo) TextView mLocationTextView;
@@ -58,7 +62,11 @@ public class RestaurantsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
                 String restaurant = ((TextView)view).getText().toString();
-                Toast.makeText(RestaurantsActivity.this, restaurant, Toast.LENGTH_LONG).show();
+                Toast.makeText(RestaurantsActivity.this, restaurant, Toast.LENGTH_LONG)
+                     .show();
+
+                // Logging errors to console.
+                Log.v(TAG, "Log in the onItemClickListener");
             }
         });
 
@@ -71,6 +79,9 @@ public class RestaurantsActivity extends AppCompatActivity {
 
     // Displaying location info onto screen.
         mLocationTextView.setText("Here are all the restaurants near: " + location + ".");
+
+    // Logging Log.d(). d for debug.
+        Log.d(TAG, "In the onCreate method Again");
     }
 }
 
