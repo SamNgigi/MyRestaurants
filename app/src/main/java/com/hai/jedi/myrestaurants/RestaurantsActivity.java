@@ -95,6 +95,7 @@ public class RestaurantsActivity extends AppCompatActivity {
  * - This is a View that leaves the screen while scrolling but is kept in memory, to be re-used to
  * display other items of data, during the recycling process.
  *
+ *
  * */
 
 
