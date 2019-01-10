@@ -11,12 +11,20 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
+                <!--Main activity is called first when app is launched-->
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RestaurantsActivity"></activity>
+        <activity android:name=".RestaurantsActivity">
+            <!--Providing additional info that MainActivity is Restaurants Activity's parent-->
+            <!--This allows us to have the back button from the Restaurants Activity-->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.hai.jedi.myrestaurants.MainActivity">
+            </meta-data>
+        </activity>
     </application>
 
 </manifest>
