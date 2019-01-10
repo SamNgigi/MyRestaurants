@@ -35,6 +35,13 @@ public class RestaurantsActivity extends AppCompatActivity {
             "Edo", "Nai City Grill", "Fat Head's Brewery", "Chipotle", "Polo"
     };
 
+    // String Array of Cuisines
+    private String[] cuisines = new String[] {
+            "Vegan Food", "Breakfast", "Fish Dish", "Scandinavian", "Coffee", "English",
+            "Burgers", "Fast Food", "Noodle Soups", "Mexican", "BBQ", "Cuban", "Bar Food",
+            "Sports Bar", "Pizza", "Pastries"
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +56,16 @@ public class RestaurantsActivity extends AppCompatActivity {
      *
      * In other words it is responsible for taking an ArrayList of objects from our business logic
      * and converts them into View objects to be displayed in our User interface.
+     *
+     * Our ArrayAdapter which we remove to add our custom MyRestaurantsArrayAdapter
+     *
+     * ArrayAdapter adapter = new ArrayAdapter(
+     *                        this, android.R.layout.simple_list_item_1, restaurants);
+     *
      * */
-    // Our ArrayAdapter
-        ArrayAdapter adapter = new ArrayAdapter(
-                       this, android.R.layout.simple_list_item_1, restaurants);
+    // Custom Array Adapter
+        MyRestaurantsArrayAdapter adapter = new MyRestaurantsArrayAdapter(
+                this, android.R.layout.simple_list_item_1, restaurants, cuisines);
 
     // Setting data to ListView
         mListView.setAdapter(adapter);
@@ -62,11 +75,8 @@ public class RestaurantsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
                 String restaurant = ((TextView)view).getText().toString();
-                Toast.makeText(RestaurantsActivity.this, restaurant, Toast.LENGTH_LONG)
-                     .show();
+                Toast.makeText(RestaurantsActivity.this, restaurant, Toast.LENGTH_LONG).show();
 
-                // Logging errors to console.
-                Log.v(TAG, "Log in the onItemClickListener");
             }
         });
 
@@ -79,9 +89,6 @@ public class RestaurantsActivity extends AppCompatActivity {
 
     // Displaying location info onto screen.
         mLocationTextView.setText("Here are all the restaurants near: " + location + ".");
-
-    // Logging Log.d(). d for debug.
-        Log.d(TAG, "In the onCreate method Again");
     }
 }
 
