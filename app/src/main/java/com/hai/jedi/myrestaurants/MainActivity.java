@@ -15,6 +15,9 @@ import android.widget.TextView;
 
 import android.graphics.Typeface;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
 
     /**
@@ -38,13 +41,16 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
 
     // Welcome text
-    private TextView welcomeText;
+    // private TextView welcomeText;
+    @BindView(R.id.sample_text) TextView welcome_text;
 
     // Initializing our button
-    private Button mFindRestaurantsButton;
+    // private Button mFindRestaurantsButton;
+    @BindView(R.id.findRestaurantsButton) Button mFindRestaurantsButton;
 
     // Initializing our Input variable
-    private EditText mLocationEditText;
+    // private EditText mLocationEditText;
+    @BindView(R.id.editLocationText) EditText mLocationEditText;
 
     /**
      *  Had to comment this out because of this error when doing tests
@@ -72,20 +78,26 @@ public class MainActivity extends AppCompatActivity {
         // R is short for resources. In this case we are using activity_main.xml
         setContentView(R.layout.activity_main);
 
-        // Setting a fonts to our text on the MainActivity
-        welcomeText = findViewById(R.id.sample_text);
+
+       /**
+        * This:
+        *  welcomeText = findViewById(R.id.sample_text);
+        *  mLocationEditText = findViewById(R.id.editLocationText);
+        *  mFindRestaurantsButton = findViewById(R.id.findRestaurantsButton);
+        *
+        * To be replaced by this
+        *
+        * */
+       ButterKnife.bind(this);
+
         // Getting our font
         Typeface ostrich_font = Typeface.createFromAsset(
                                getAssets(), "fonts/ostrich-regular.ttf");
         // Setting our font at runtime.
-        welcomeText.setTypeface(ostrich_font);
+        welcome_text.setTypeface(ostrich_font);
 
 
-        // User Input
-        mLocationEditText = findViewById(R.id.editLocationText);
 
-        // Our Button
-        mFindRestaurantsButton = findViewById(R.id.findRestaurantsButton);
 
         // We add a listener to our button so that we can make it do something when it is clicked.
         mFindRestaurantsButton.setOnClickListener(new View.OnClickListener() {

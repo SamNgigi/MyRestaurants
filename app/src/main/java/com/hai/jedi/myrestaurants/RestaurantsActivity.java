@@ -13,12 +13,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class RestaurantsActivity extends AppCompatActivity {
     // Var that stores view we will display the welcome data.
-    private TextView mLocationTextView;
-    private ListView mListView;
+    // private TextView mLocationTextView;
+    @BindView(R.id.locationInfo) TextView mLocationTextView;
+    // private ListView mListView;
+    @BindView(R.id.listView) ListView mListView;
 
     // String Array of dummy restaurants that we want to display
     private String[] restaurants = new String[]{
@@ -32,13 +36,7 @@ public class RestaurantsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurants);
-
-    // Our list view
-        mListView = findViewById(R.id.listView);
-
-    // Assigning our RestaurantActivity TextView Where we will display text when the activity
-    // launched
-        mLocationTextView = findViewById(R.id.locationInfo);
+        ButterKnife.bind(this);
 
     /**
      * So basically what an ArrayAdapter does is that it parses data from our Array to our ListView
