@@ -21,10 +21,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="155dp"
+        android:layout_marginTop="120dp"
         android:text="@string/hello"
         android:textColor="@color/textIcons"
-        android:textSize="55sp"
+        android:textSize="45sp"
         android:textStyle="bold" />
 
     <EditText
