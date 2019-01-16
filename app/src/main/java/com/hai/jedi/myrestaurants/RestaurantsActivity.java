@@ -90,6 +90,8 @@ public class RestaurantsActivity extends AppCompatActivity {
     // Displaying location info onto screen.
         mLocationTextView.setText("Here are all the restaurants near: " + location + ".");
     }
+
+    
 }
 
 /**
