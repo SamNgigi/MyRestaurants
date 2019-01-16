@@ -19,6 +19,7 @@ android {
     buildTypes {
         debug {
             buildConfigField('String', "ApiKey", YelpApiKey)
+            buildConfigField('String', 'ClientID', YelpClientID)
             resValue('string', "api_key", YelpApiKey)
         }
         release {
@@ -26,6 +27,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             // I think for multiple secret keys we would use the Map version buildConfigFields()
             buildConfigField('String', "ApiKey", YelpApiKey)
+            buildConfigField('String', "ClientId", YelpClientID)
             // resValue is in case you would need to add api keys to xml
             resValue('string', "api_key", YelpApiKey)
         }
@@ -57,6 +59,8 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
     implementation 'com.jakewharton:butterknife:10.0.0'
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'
+    implementation 'se.akerfeldt:okhttp-signpost:1.1.0'
+    implementation 'oauth.signpost:signpost-core:1.2.1.2'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
     testImplementation 'junit:junit:4.12'
     testImplementation "org.robolectric:robolectric:4.1"
