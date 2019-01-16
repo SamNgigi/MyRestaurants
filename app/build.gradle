@@ -56,9 +56,11 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
     implementation 'com.jakewharton:butterknife:10.0.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
     testImplementation 'junit:junit:4.12'
     testImplementation "org.robolectric:robolectric:4.1"
+    testImplementation "com.squareup.okhttp3:mockwebserver:3.12.1"
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.1'
     androidTestImplementation 'androidx.test:runner:1.1.1'
