@@ -16,7 +16,13 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import okhttp3.Callback;
+import okhttp3.Call;
+import okhttp3.Response;
+
 import android.util.Log;
+
+import java.io.IOException;
 
 public class RestaurantsActivity extends AppCompatActivity {
     // Logging Constant for debugging
@@ -89,9 +95,30 @@ public class RestaurantsActivity extends AppCompatActivity {
 
     // Displaying location info onto screen.
         mLocationTextView.setText("Here are all the restaurants near: " + location + ".");
+        getRestaurants(location);
     }
 
-    
+
+    private void getRestaurants(String location) {
+        final YelpService yelpService = new YelpService();
+        yelpService.findRestaurants(location, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    String response_data = response.body().string();
+                    Log.v(TAG, response_data);
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
 }
 
 /**
