@@ -23,6 +23,7 @@ import okhttp3.Response;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class RestaurantsActivity extends AppCompatActivity {
     // Logging Constant for debugging
@@ -47,6 +48,9 @@ public class RestaurantsActivity extends AppCompatActivity {
             "Burgers", "Fast Food", "Noodle Soups", "Mexican", "BBQ", "Cuban", "Bar Food",
             "Sports Bar", "Pizza", "Pastries"
     };
+
+    public ArrayList<Restaurant> mRestaurants = new ArrayList<>();
+
 
 
     @Override
@@ -112,6 +116,18 @@ public class RestaurantsActivity extends AppCompatActivity {
                 try {
                     String response_data = response.body().string();
                     Log.v(TAG, response_data);
+                    if(response.isSuccessful()){
+                        // We pass in our response to be processed into an ArrayList of restaurants
+                        mRestaurants = yelpService.processResults(response);
+
+
+                        RestaurantsActivity.this.runOnUiThread(new Runnable(){
+                            @Override
+                            public void run(){
+                                String[]
+                            }
+                        });
+                    }
                 } catch (IOException e){
                     e.printStackTrace();
                 }
