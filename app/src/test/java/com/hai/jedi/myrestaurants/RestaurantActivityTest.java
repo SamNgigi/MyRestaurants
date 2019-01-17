@@ -2,6 +2,8 @@ package com.hai.jedi.myrestaurants;
 
 import android.widget.ListView;
 
+import com.hai.jedi.myrestaurants.UI.RestaurantsActivity;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

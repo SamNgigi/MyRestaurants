@@ -1,6 +1,8 @@
 package com.hai.jedi.myrestaurants;
 
 //import android.content.Intent;
+import com.hai.jedi.myrestaurants.UI.MainActivity;
+
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Rule;

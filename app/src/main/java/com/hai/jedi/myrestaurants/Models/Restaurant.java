@@ -1,4 +1,4 @@
-package com.hai.jedi.myrestaurants;
+package com.hai.jedi.myrestaurants.Models;
 
 import java.util.ArrayList;
 

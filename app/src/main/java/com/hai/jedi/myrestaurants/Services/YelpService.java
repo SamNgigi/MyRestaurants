@@ -1,6 +1,9 @@
-package com.hai.jedi.myrestaurants;
+package com.hai.jedi.myrestaurants.Services;
 
 import android.util.Log;
+
+import com.hai.jedi.myrestaurants.Constants;
+import com.hai.jedi.myrestaurants.Models.Restaurant;
 
 import org.json.JSONException;
 import org.json.JSONObject;

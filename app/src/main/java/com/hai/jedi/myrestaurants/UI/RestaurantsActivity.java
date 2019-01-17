@@ -1,17 +1,12 @@
-package com.hai.jedi.myrestaurants;
+package com.hai.jedi.myrestaurants.UI;
 
 import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
-import android.view.View;
-
 import android.widget.TextView;
 import android.widget.ListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,6 +17,11 @@ import okhttp3.Response;
 
 import android.util.Log;
 
+import com.hai.jedi.myrestaurants.Models.Restaurant;
+import com.hai.jedi.myrestaurants.MyRestaurantsArrayAdapter;
+import com.hai.jedi.myrestaurants.R;
+import com.hai.jedi.myrestaurants.Services.YelpService;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -31,7 +31,7 @@ public class RestaurantsActivity extends AppCompatActivity {
 
     // Var that stores view we will display the welcome data.
     // private TextView mLocationTextView;
-    @BindView(R.id.locationInfo) TextView mLocationTextView;
+    @BindView( R.id.locationInfo) TextView mLocationTextView;
     // private ListView mListView;
     @BindView(R.id.listView) ListView mListView;
 

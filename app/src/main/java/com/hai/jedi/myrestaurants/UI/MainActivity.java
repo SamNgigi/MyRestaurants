@@ -1,4 +1,4 @@
-package com.hai.jedi.myrestaurants;
+package com.hai.jedi.myrestaurants.UI;
 
 import android.content.Intent;
 
@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import android.graphics.Typeface;
 
+import com.hai.jedi.myrestaurants.R;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -24,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // Had not seen this. Had to initialize tag here.
     public static final String TAG = MainActivity.class.getSimpleName();
 
-    @BindView(R.id.sample_text) TextView welcome_text;
+    @BindView( R.id.sample_text) TextView welcome_text;
 
     @BindView(R.id.findRestaurantsButton) Button mFindRestaurantsButton;
 

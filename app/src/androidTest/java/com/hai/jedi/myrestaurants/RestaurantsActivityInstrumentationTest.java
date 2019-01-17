@@ -4,6 +4,8 @@ import androidx.test.rule.ActivityTestRule;
 
 import android.view.View;
 
+import com.hai.jedi.myrestaurants.UI.RestaurantsActivity;
+
 import org.junit.Rule;
 import org.junit.Test;
 
