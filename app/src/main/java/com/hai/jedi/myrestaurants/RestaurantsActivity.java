@@ -59,38 +59,6 @@ public class RestaurantsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_restaurants);
         ButterKnife.bind(this);
 
-    /**
-     * So basically what an ArrayAdapter does is that it parses data from our Array to our ListView
-     * in the format of our choosing. It can be a simple list, drop down, or any other option of
-     * list.
-     *
-     * In other words it is responsible for taking an ArrayList of objects from our business logic
-     * and converts them into View objects to be displayed in our User interface.
-     *
-     * Our ArrayAdapter which we remove to add our custom MyRestaurantsArrayAdapter
-     *
-     * ArrayAdapter adapter = new ArrayAdapter(
-     *                        this, android.R.layout.simple_list_item_1, restaurants);
-     *
-     * */
-    // Custom Array Adapter
-        MyRestaurantsArrayAdapter adapter = new MyRestaurantsArrayAdapter(
-                this, android.R.layout.simple_list_item_1, restaurants, cuisines);
-
-    // Setting data to ListView
-        mListView.setAdapter(adapter);
-
-    // Adding a simple toast of the restaurant name when someone clicks on a list item
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
-                String restaurant = ((TextView)view).getText().toString();
-                Toast.makeText(RestaurantsActivity.this, restaurant, Toast.LENGTH_LONG).show();
-
-            }
-        });
-
-
     // We pull the data out of our restaurant_activity_intent that we declared in our MainActivity
         Intent restaurant_activity_intent = getIntent();
 
@@ -105,6 +73,7 @@ public class RestaurantsActivity extends AppCompatActivity {
 
     private void getRestaurants(String location) {
         final YelpService yelpService = new YelpService();
+
         yelpService.findRestaurants(location, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -113,24 +82,48 @@ public class RestaurantsActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    String response_data = response.body().string();
-                    Log.v(TAG, response_data);
-                    if(response.isSuccessful()){
-                        // We pass in our response to be processed into an ArrayList of restaurants
-                        mRestaurants = yelpService.processResults(response);
+                mRestaurants = yelpService.processResults(response);
+                Log.d(TAG, mLocationTextView.toString());
 
+                RestaurantsActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run(){
+                        String[] restaurantNames = new String[mRestaurants.size()];
+                        for (int i = 0; i < restaurantNames.length; i++) {
+                            restaurantNames[i] = mRestaurants.get(i).getmName();
+                        }
+                        Log.d(TAG, restaurantNames.toString());
 
-                        RestaurantsActivity.this.runOnUiThread(new Runnable(){
-                            @Override
-                            public void run(){
-                                String[]
-                            }
-                        });
+                        String[] restaurantCuisines = new String[mRestaurants.size()];
+                        for(int i = 0; i < restaurantCuisines.length; i++){
+                            restaurantCuisines[i] = android.text.TextUtils.join(", ",
+                                    mRestaurants.get(i).getmCategories());
+                        }
+                        /**
+                         * Simple ArrayAdapter
+                         * ArrayAdapter adapter = new ArrayAdapter<>(RestaurantsActivity.this,
+                                android.R.layout.simple_list_item_1, restaurantNames);
+                         */
+                        // Custom ArrayAdapter
+                        MyRestaurantsArrayAdapter adapter = new MyRestaurantsArrayAdapter(
+                                RestaurantsActivity.this,
+                                android.R.layout.simple_list_item_1,
+                                restaurantNames, restaurantCuisines
+                                );
+                        mListView.setAdapter(adapter);
+
+                        for (Restaurant restaurant : mRestaurants) {
+                            Log.d(TAG, "Name: " + restaurant.getmName());
+                            Log.d(TAG, "Phone: " + restaurant.getmPhone());
+                            Log.d(TAG, "Website: " + restaurant.getmWebsite());
+                            Log.d(TAG, "Image url: " + restaurant.getmImageUrl());
+                            Log.d(TAG, "Rating: " + Double.toString(restaurant.getmRating()));
+                            Log.d(TAG, "Address: " + android.text.TextUtils.join(", ",
+                                    restaurant.getmAddresses()));
+                            Log.d(TAG, "Categories: " + restaurant.getmCategories().toString());
+                        }
                     }
-                } catch (IOException e){
-                    e.printStackTrace();
-                }
+                });
             }
         });
     }

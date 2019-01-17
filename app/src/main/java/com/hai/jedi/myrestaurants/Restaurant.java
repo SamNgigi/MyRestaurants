@@ -50,16 +50,16 @@ public class Restaurant {
         return mImageUrl;
     }
 
-    public ArrayList<String> getmAddress(){
-        return mAddress;
-    }
-
     public double getmLatitude(){
         return mLatitude;
     }
 
     public double getmLongitude(){
         return mLongitude;
+    }
+
+    public ArrayList<String> getmAddresses(){
+        return mAddress;
     }
 
     public ArrayList<String> getmCategories(){

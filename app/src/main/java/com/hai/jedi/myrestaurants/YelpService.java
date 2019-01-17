@@ -1,5 +1,7 @@
 package com.hai.jedi.myrestaurants;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -13,9 +15,10 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class YelpService {
-
+    public static final String TAG = YelpService.class.getSimpleName();
     public static void findRestaurants(String location, Callback callback){
         OkHttpClient client = new OkHttpClient();
 
@@ -44,13 +47,16 @@ public class YelpService {
 
         try{
             // The json response as a String
-            String json_data = response.body().string();
+            ResponseBody responseBody = response.body();
+            String json_data = responseBody.string();
+            Log.d(TAG, json_data);
             // If the api call was successful
             if (response.isSuccessful()){
                 // Json Object from the Json String
                 JSONObject yelp_response = new JSONObject(json_data);
                 // Return the array of business. NOTE business is an array so we use getJSONArray
                 JSONArray biz_json_array = yelp_response.getJSONArray("businesses");
+                Log.d(TAG, biz_json_array.toString());
                 // We loop through the business array
                 for(int i = 0; i < biz_json_array.length(); i++){
                     // Get each restaurant
@@ -75,24 +81,24 @@ public class YelpService {
 
                     // Where we will store all our addresses
                     ArrayList<String> addresses = new ArrayList<>();
-                    // We get our addressJson from the location "object" in the api response.
-                    // We the find the addresses in the display_address "array"
-                    JSONArray addressesJson = restaurantJSON.getJSONObject("location")
+                    // We get our addressJson from the location
+                    JSONArray addressessJson = restaurantJSON.getJSONObject("location")
                                                              .getJSONArray("display_address");
-                    for(int x = 0; x < addressesJson.length(); x++){
-                        addresses.add(addressesJson.get(x).toString());
+                    for(int x = 0; x < addressessJson.length(); x++){
+                        addresses.add(addressessJson.get(x).toString());
                     }
 
-                    // Where we will store our categories
                     ArrayList<String> categories = new ArrayList<>();
-                    // We get our categories from the categories array
                     JSONArray categoriesJSON = restaurantJSON.getJSONArray("categories");
                     for(int z = 0; z < categoriesJSON.length(); z++){
-                        categories.add(categoriesJSON.getJSONArray(z).get(0).toString());
+                        JSONObject categoryObject = categoriesJSON.getJSONObject(z);
+                        categories.add(categoryObject.getString("alias"));
                     }
+                    Log.d(TAG, categories.toString());
 
                     Restaurant restaurant = new Restaurant(name, phone, website, rating, imageUrl,
                             latitude, longitude, addresses, categories);
+                    Log.d(TAG, String.valueOf(restaurant));
                     restaurants.add(restaurant);
                 }
             }

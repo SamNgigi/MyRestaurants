@@ -31,7 +31,7 @@ public class MyRestaurantsArrayAdapter extends ArrayAdapter {
         // The index comes from the our ArrayAdapter iterating through the Restaurants & Cuisines Arr
         String restaurant = mRestaurants[index];
         String cuisine = mCuisines[index];
-        return String.format("%s \nServes great: %s", restaurant, cuisine);
+        return String.format("%s \nTags: %s", restaurant, cuisine);
     }
 
     @Override
