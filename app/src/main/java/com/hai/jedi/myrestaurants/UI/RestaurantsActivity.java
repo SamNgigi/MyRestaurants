@@ -18,7 +18,7 @@ import okhttp3.Response;
 import android.util.Log;
 
 import com.hai.jedi.myrestaurants.Models.Restaurant;
-import com.hai.jedi.myrestaurants.MyRestaurantsArrayAdapter;
+import com.hai.jedi.myrestaurants.Adapters.MyRestaurantsArrayAdapter;
 import com.hai.jedi.myrestaurants.R;
 import com.hai.jedi.myrestaurants.Services.YelpService;
 

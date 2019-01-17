@@ -6,4 +6,11 @@
     <string name="input_text">Enter Zip Code</string>
 
     <string name="rest_act">Restaurants near</string>
+
+    <string name="restaurant_name">Restaurant Name</string>
+    <string name="tags">Tags</string>
+    <string name="rating">Rating</string>
+
+    <string name="img_description">Mine</string>
+
 </resources>

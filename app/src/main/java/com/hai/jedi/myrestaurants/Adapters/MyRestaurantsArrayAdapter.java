@@ -1,4 +1,4 @@
-package com.hai.jedi.myrestaurants;
+package com.hai.jedi.myrestaurants.Adapters;
 
 import android.content.Context;
 import android.widget.ArrayAdapter;
