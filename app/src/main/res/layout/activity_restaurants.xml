@@ -4,16 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context=".UI.RestaurantsActivity">
 
-    <TextView
-        android:id="@+id/locationInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/rest_act"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"/>
+    <!--
+    This is a newer Android ViewGroup object meant to render
+    any adapter-based view.
 
+    It is similar to a ListView but with many updated features,
+    including the ability to implement both horizontal and vertical
+    lists
+
+    To use the RecyclerView we also need to include the corresponding
+    RecyclerView.Adapter and LayoutManager.
+    -->
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
