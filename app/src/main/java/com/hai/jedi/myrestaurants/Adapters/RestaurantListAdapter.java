@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.hai.jedi.myrestaurants.Models.Restaurant;
 import com.hai.jedi.myrestaurants.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -93,6 +94,8 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         // We define the method below that will set the contents of the layouts TextView to the
         // attributes specific to a restaurant.
         public void bindRestaurant(Restaurant restaurant){
+            // It would seem that we do not need to pass mContext to the get()
+            Picasso.get().load(restaurant.getmImageUrl()).into(mRestaurantImageView);
             mNameTextView.setText(restaurant.getmName());
             mTagTextView.setText(restaurant.getmCategories().get(0));
             // mTagTextView.setText(android.text.TextUtils.join(", ", restaurant.getmCategories()));
