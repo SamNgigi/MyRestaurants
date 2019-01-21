@@ -63,6 +63,7 @@ dependencies {
     implementation 'oauth.signpost:signpost-core:1.2.1.2'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.jakewharton:butterknife:10.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
     testImplementation 'junit:junit:4.12'
     testImplementation "org.robolectric:robolectric:4.1"
