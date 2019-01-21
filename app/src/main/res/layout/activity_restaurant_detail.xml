@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UI.RestaurantDetailActivity">
+
+    <!--Container for our fragment-->
+    <androidx.viewpager.widget.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/viewPager">
+        <!--
+            PageTabStrip creates a header at the top of our
+            ViewPager which will display the current restaurants
+            name.
+        -->
+        <androidx.viewpager.widget.PagerTabStrip
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:foregroundGravity="top"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp">
+        </androidx.viewpager.widget.PagerTabStrip>
+
+    </androidx.viewpager.widget.ViewPager>
+
+</RelativeLayout>

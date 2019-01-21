@@ -4,7 +4,8 @@ import androidx.test.rule.ActivityTestRule;
 
 import android.view.View;
 
-import com.hai.jedi.myrestaurants.UI.RestaurantsActivity;
+import com.hai.jedi.myrestaurants.UI.RestaurantsListActivity;
+import com.hai.jedi.myrestaurants.R;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,12 +20,12 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.core.IsNot.not;
 
-public class RestaurantsActivityInstrumentationTest {
+public class RestaurantsListActivityInstrumentationTest {
 
     // Configuring the right activity before we test
     @Rule
-    public ActivityTestRule<RestaurantsActivity> restaurants_activity_test_rule =
-            new ActivityTestRule<>(RestaurantsActivity.class);
+    public ActivityTestRule<RestaurantsListActivity> restaurants_activity_test_rule =
+            new ActivityTestRule<>(RestaurantsListActivity.class);
 
     // Test to make sure a click on a ListView item returns the correct restaurant name as toast
     @Test
@@ -46,7 +47,8 @@ public class RestaurantsActivityInstrumentationTest {
          * To interact with the data in the adapter we MUST use the onData() method rather than the
          * onView()
          * */
-        onData(anything()).inAdapterView(withId(R.id.listView))
+        // Todo: I do not think this test would run. We have to reconfigure it for RecyclerView.
+        onData(anything()).inAdapterView(withId(R.id.recyclerView))
                           .atPosition(0)
                           .perform(click());
 

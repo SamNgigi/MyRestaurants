@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.widget.TextView;
 
 import com.hai.jedi.myrestaurants.UI.MainActivity;
-import com.hai.jedi.myrestaurants.UI.RestaurantsActivity;
+import com.hai.jedi.myrestaurants.UI.RestaurantsListActivity;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class MainActivityTest {
         activity.findViewById(R.id.findRestaurantsButton).performClick();
 
         // Creating the activity that we expect.
-        Intent expected_intent = new Intent(activity, RestaurantsActivity.class);
+        Intent expected_intent = new Intent(activity, RestaurantsListActivity.class);
 
         /**
          * Shadows are classes that modify or extend the behaviour of a class in

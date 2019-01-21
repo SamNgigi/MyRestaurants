@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hai.jedi.myrestaurants">
-    <!--Requesting internet permissions-->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Requesting internet permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -11,23 +11,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".UI.RestaurantDetailActivity"></activity>
         <activity
             android:name=".UI.MainActivity"
             android:theme="@style/NoActionBarTheme">
             <intent-filter>
-                <!--Main activity is called first when app is launched-->
+
+                <!-- Main activity is called first when app is launched -->
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UI.RestaurantsActivity">
-            <!--Providing additional info that MainActivity is Restaurants Activity's parent-->
-            <!--This allows us to have the back button from the Restaurants Activity-->
+        <activity android:name=".UI.RestaurantsListActivity">
+
+            <!-- Providing additional info that MainActivity is Restaurants Activity's parent -->
+            <!-- This allows us to have the back button from the Restaurants Activity -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.hai.jedi.myrestaurants.UI.MainActivity">
-            </meta-data>
+                android:value="com.hai.jedi.myrestaurants.UI.MainActivity"></meta-data>
         </activity>
     </application>
 

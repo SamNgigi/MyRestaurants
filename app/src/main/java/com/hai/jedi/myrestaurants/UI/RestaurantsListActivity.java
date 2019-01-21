@@ -5,9 +5,6 @@ import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
-import android.widget.TextView;
-import android.widget.ListView;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -17,20 +14,17 @@ import okhttp3.Callback;
 import okhttp3.Call;
 import okhttp3.Response;
 
-import android.util.Log;
-
 import com.hai.jedi.myrestaurants.Adapters.RestaurantListAdapter;
 import com.hai.jedi.myrestaurants.Models.Restaurant;
-import com.hai.jedi.myrestaurants.Adapters.MyRestaurantsArrayAdapter;
 import com.hai.jedi.myrestaurants.R;
 import com.hai.jedi.myrestaurants.Services.YelpService;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class RestaurantsActivity extends AppCompatActivity {
+public class RestaurantsListActivity extends AppCompatActivity {
     // Logging Constant for debugging
-    public static final String TAG = RestaurantsActivity.class.getSimpleName();
+    public static final String TAG = RestaurantsListActivity.class.getSimpleName();
 
     @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
     private RestaurantListAdapter mAdapter;
@@ -68,14 +62,14 @@ public class RestaurantsActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 mRestaurants = yelpService.processResults(response);
 
-                RestaurantsActivity.this.runOnUiThread(new Runnable() {
+                RestaurantsListActivity.this.runOnUiThread(new Runnable() {
 
                     @Override
                     public void run(){
                         mAdapter = new RestaurantListAdapter(getApplicationContext(), mRestaurants);
                         mRecyclerView.setAdapter(mAdapter);
                         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
-                                RestaurantsActivity.this);
+                                RestaurantsListActivity.this);
                         mRecyclerView.setLayoutManager(layoutManager);
                         // This informs the RecyclerView that its width and height should always
                         // the same. Otherwise as individual list item views are continually recycled,
