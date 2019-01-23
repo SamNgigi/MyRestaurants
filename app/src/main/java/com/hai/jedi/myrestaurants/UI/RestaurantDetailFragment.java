@@ -3,9 +3,10 @@ package com.hai.jedi.myrestaurants.UI;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.os.Parcel;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,6 +67,7 @@ public class RestaurantDetailFragment extends Fragment {
         super.onCreate(savedInstances);
         // When our fragment instances is created/initialized we want to deserialize the serialized
         // restaurant and store it to mRestaurant.
+        assert getArguments() != null;
         mRestaurant = Parcels.unwrap(getArguments().getParcelable("restaurant"));
     }
 

@@ -1,6 +1,7 @@
 package com.hai.jedi.myrestaurants.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hai.jedi.myrestaurants.Models.Restaurant;
+import com.hai.jedi.myrestaurants.UI.RestaurantDetailActivity;
 import com.hai.jedi.myrestaurants.R;
 import com.squareup.picasso.Picasso;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -77,7 +81,8 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 
     // We define our ViewHolderClass that our RecycleView will need. This is where we define the data
     // to be displayed
-    public class RestaurantViewHolder extends RecyclerView.ViewHolder{
+    public class RestaurantViewHolder extends RecyclerView.ViewHolder implements
+    View.OnClickListener{
         // We use ButterKnife to bind all views in the layout
         @BindView( R.id.restaurantImageView) ImageView mRestaurantImageView;
         @BindView(R.id.restaurantNameTextView) TextView mNameTextView;
@@ -90,7 +95,23 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
             super(itemView);
             ButterKnife.bind(this, itemView);
             mContext = itemView.getContext();
+            // We set our listener to our RestaurantView Holder constructor
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View view){
+            // Getting the specific item in the layout that has been clicked
+            int itemPosition = getLayoutPosition();
+            // Intent to navigate to our RestaurantDetailActivity
+            Intent intent = new Intent(mContext, RestaurantDetailActivity.class);
+            // Pass the item position and restaurant as data to be passes to RestaurantDetailActivity
+            intent.putExtra("position", itemPosition);
+            intent.putExtra("restaurants", Parcels.wrap(mRestaurants));
+            // Start/launch RestaurantDetailActivity
+            mContext.startActivity(intent);
+        }
+
         // We define the method below that will set the contents of the layouts TextView to the
         // attributes specific to a restaurant.
         public void bindRestaurant(Restaurant restaurant){
@@ -101,6 +122,8 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
             // mTagTextView.setText(android.text.TextUtils.join(", ", restaurant.getmCategories()));
             mRatingTextView.setText(String.format("Rating: %s/5", restaurant.getmRating()));
         }
+
+
     }
 
 }
