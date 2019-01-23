@@ -58,7 +58,8 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:textColor="@color/secondaryText"
-                android:textStyle="italic"/>
+                android:textStyle="italic"
+                android:id="@+id/tagTextView"/>
 
         </RelativeLayout>
 
@@ -90,7 +91,34 @@
                     android:textSize="15dp"
                     android:textStyle="bold"
                     android:layout_marginBottom="10dp"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:id="@+id/urlTextView"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(503) 223-1282"
+                    android:drawableLeft="@drawable/ic_baseline_call_24px"
+                    android:drawablePadding="4dp"
+                    android:textColor="@color/textIcons"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:id="@+id/phoneTextView"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="123 SW Best Ever Ave. Portland, Oregon, 97222"
+                    android:drawableLeft="@drawable/ic_baseline_map_24px"
+                    android:drawablePadding="4dp"
+                    android:textColor="@color/textIcons"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center_vertical"
+                    android:id="@+id/addressTextView"/>
 
             </LinearLayout>
             <Button

@@ -2,6 +2,10 @@ package com.hai.jedi.myrestaurants.Models;
 
 import java.util.ArrayList;
 
+// Library for serialization and deserialization
+import org.parceler.Parcel;
+
+@Parcel
 public class Restaurant {
 
     // We use this class to define the Restaurant Object.
@@ -15,6 +19,8 @@ public class Restaurant {
     private double mLongitude;
     private ArrayList<String> mAddress = new ArrayList<>();
     private ArrayList<String> mCategories = new ArrayList<>();
+
+    public Restaurant(){};
 
     public Restaurant(String name, String phone, String website, double rating,
                       String imageUrl, double latitude, double longitude, ArrayList<String> address,
