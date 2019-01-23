@@ -83,7 +83,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // We check which view has been clicked and take action accordingly.
         if(v == mFindRestaurantsButton) {
             String location = mLocationEditText.getText().toString();
-            addToSharedPreferences(location);
+            if(!(location).equals("")){
+                addToSharedPreferences(location);
+            }
             Intent intent = new Intent(MainActivity.this, RestaurantsListActivity.class);
             startActivity(intent);
         }

@@ -49,12 +49,15 @@ public class RestaurantsListActivity extends AppCompatActivity {
     // We retrieve the location info using our key "location_data"
         String location = restaurant_activity_intent.getStringExtra("location_data");
 
-        getRestaurants(location);
         // Testing to see if the location can be retrieved from the SharedPreferences
         SharedPreferences mSharedPreference = PreferenceManager.getDefaultSharedPreferences(this);
         String mRecentAddress = mSharedPreference.getString(Constants.PREFERENCE_LOCATION_KEY,
                 null);
-        Log.d("Shared Pref Location", mRecentAddress);
+        // Log.d("Shared Pref Location", mRecentAddress);
+        if(mRecentAddress != null){
+            // Parse our shared preferences to our get restaurant method
+            getRestaurants(mRecentAddress);
+        }
     }
 
 
