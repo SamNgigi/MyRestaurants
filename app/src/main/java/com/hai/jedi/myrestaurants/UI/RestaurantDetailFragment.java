@@ -1,6 +1,8 @@
 package com.hai.jedi.myrestaurants.UI;
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -26,7 +28,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RestaurantDetailFragment extends Fragment {
+public class RestaurantDetailFragment extends Fragment implements View.OnClickListener{
 
     //Attaching the layout views to our logic
     @BindView(R.id.restaurantImageView) ImageView mImageLabel;
@@ -85,9 +87,35 @@ public class RestaurantDetailFragment extends Fragment {
         mRatingLabel.setText(String.format("%s/5",Double.toString(mRestaurant.getmRating())));
         mPhoneLabel.setText(mRestaurant.getmPhone());
         mAddressLabel.setText(android.text.TextUtils.join(", ", mRestaurant.getmAddresses()));
+        mUrlLabel.setText(mRestaurant.getmName());
 
+        // We set OnClickListeners to website url phone and address
+        mUrlLabel.setOnClickListener(this);
+        mPhoneLabel.setOnClickListener(this);
+        mAddressLabel.setOnClickListener(this);
         // We haven't the website url yet.
         return view;
+    }
+
+    @Override
+    public void onClick(View view){
+        if(view == mUrlLabel){
+            Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                                Uri.parse(mRestaurant.getmWebsite()));
+            startActivity(webIntent);
+        }
+        if(view == mPhoneLabel) {
+            Intent phoneIntent = new Intent(Intent.ACTION_DIAL,
+                                Uri.parse("tel: " + mRestaurant.getmPhone()));
+            startActivity(phoneIntent);
+        }
+        if(view == mAddressLabel){
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW,
+                                Uri.parse("geo: " + mRestaurant.getmLatitude()
+                                            + "," + mRestaurant.getmLongitude()
+                                            +"?q=(" + mRestaurant.getmName() + ")"));
+            startActivity(mapIntent);
+        }
     }
 
 }
