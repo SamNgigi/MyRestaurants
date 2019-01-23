@@ -1,6 +1,10 @@
 package com.hai.jedi.myrestaurants.UI;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
+
+import android.preference.PreferenceManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +19,7 @@ import android.widget.TextView;
 
 import android.graphics.Typeface;
 
+import com.hai.jedi.myrestaurants.Constants;
 import com.hai.jedi.myrestaurants.R;
 
 import butterknife.BindView;
@@ -32,6 +37,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @BindView(R.id.editLocationText) EditText mLocationEditText;
 
+    // What we will use to persist primitive data to phone memory.
+    // Variable to reference the the shared preference tool itself
+    private SharedPreferences mSharedPreferences;
+    // Dedicated tool to edit the shared preferences
+    private SharedPreferences.Editor mEditor;
+
     // Used to load the 'native-lib' library on application startup.
     protected void loadNativeLibraries() {
         try {
@@ -42,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @SuppressLint( "CommitPrefEdits" )
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Run default behaviours for an activity.
@@ -51,13 +63,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
        ButterKnife.bind(this);
 
+       mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+       mEditor = mSharedPreferences.edit();
+
         // Getting our font
         Typeface ostrich_font = Typeface.createFromAsset(
                                getAssets(), "fonts/ostrich-regular.ttf");
         // Setting our font at runtime.
         welcome_text.setTypeface(ostrich_font);
 
-        // We listen for a click then implement View.OnClickListener's onClick() method.
+        // We listen for a click then implement Visew.OnClickListener's onClick() method.
         mFindRestaurantsButton.setOnClickListener(this);
 
     }
@@ -68,10 +83,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // We check which view has been clicked and take action accordingly.
         if(v == mFindRestaurantsButton) {
             String location = mLocationEditText.getText().toString();
+            addToSharedPreferences(location);
             Intent intent = new Intent(MainActivity.this, RestaurantsListActivity.class);
-            intent.putExtra("location_data", location);
             startActivity(intent);
         }
+    }
+
+    // We define this method which calls upon the editor to write user's location input to
+    // shared preferences.
+    private void addToSharedPreferences(String location) {
+        // We call the apply method to persist the location info in a key - value pair
+        mEditor.putString(Constants.PREFERENCE_LOCATION_KEY, location).apply();
     }
 
 }
