@@ -19,6 +19,7 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import butterknife.BindView;
@@ -61,12 +62,12 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 
     // Below method inflates an xml layout and returns a ViewHolder. I think it populates/inflates
     // each view it with data from the restaurant object
+    @NonNull
     @Override
-    public RestaurantListAdapter.RestaurantViewHolder onCreateViewHolder(ViewGroup parent, int ViewType){
+    public RestaurantListAdapter.RestaurantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int ViewType){
         View view = LayoutInflater.from(parent.getContext())
                                   .inflate(R.layout.restaurant_list_item, parent, false);
-        RestaurantViewHolder viewHolder = new RestaurantViewHolder(view);
-        return viewHolder;
+        return new RestaurantViewHolder(view);
     }
 
     @Override

@@ -73,7 +73,7 @@ public class RestaurantDetailFragment extends Fragment {
 
     // Here we set the various restaurant attributes to the ImageViews and TextViews
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_restaurant_detail, container, false);
