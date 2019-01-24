@@ -25,7 +25,8 @@ public class RestaurantActivityTest {
         // Setting up the activity we are testing
         restaurant_activity = Robolectric.setupActivity(RestaurantsListActivity.class);
         // Setting up the ListView on the activity that we are testing.
-        mRestaurantListView = restaurant_activity.findViewById(R.id.listView);
+        // We modified this view to use RecyclerView.
+        // mRestaurantListView = restaurant_activity.findViewById(R.id.listView);
     }
 
     @Test

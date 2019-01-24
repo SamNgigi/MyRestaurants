@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 
 import android.preference.PreferenceManager;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -27,6 +28,11 @@ import butterknife.ButterKnife;
 
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+
+import java.util.Objects;
 
 // We implement the built in OnClickListener here
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -67,6 +73,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .getInstance()
                 .getReference()
                 .child(Constants.FIREBASE_CHILD_SEARCHED_LOCATION);
+
+        mSearchedLocationsReference.addValueEventListener(new ValueEventListener(){
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot){
+                /**
+                 * Called whenever data at the specific note ( searchedLocation) changes
+                 * such as when we add a new location.
+                 * It will return a new dataSnapshot - a read-only copy of the Firebase state.
+                 * */
+                for(DataSnapshot locationSnapShot : dataSnapshot.getChildren()){
+                    /**
+                     * We loop through all the locations stored on the searchLocation node by calling
+                     * the getChildren() method on the dataSnapshot of the node
+                     *
+                     * We then get the value of each child node.*/
+
+                    String location = Objects.requireNonNull(locationSnapShot.getValue()).toString();
+                    Log.d("Locations updated ->", "LOCATION: " + location);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError){
+                /**
+                 * Called if the listener is unsuccessful for any reason.
+                 * */
+                // Do something
+            }
+        });
         // Run default behaviours for an activity.
         super.onCreate(savedInstanceState);
 
