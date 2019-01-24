@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // What we will use to persist primitive data to phone memory.
     // Variable to reference the the shared preference tool itself
-   /* private SharedPreferences mSharedPreferences;
+    private SharedPreferences mSharedPreferences;
     // Dedicated tool to edit the shared preferences
-    private SharedPreferences.Editor mEditor;*/
+    private SharedPreferences.Editor mEditor;
 
 
     // Used to load the 'native-lib' library on application startup.
@@ -74,8 +74,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
        ButterKnife.bind(this);
 
-       /*mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-       mEditor = mSharedPreferences.edit();*/
+       mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+       mEditor = mSharedPreferences.edit();
 
         // Getting our font
         Typeface ostrich_font = Typeface.createFromAsset(
@@ -94,12 +94,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // We check which view has been clicked and take action accordingly.
         if(v == mFindRestaurantsButton) {
             String location = mLocationEditText.getText().toString();
-            saveLocationToFirebase(location);
-            /*if(!(location).equals("")){
+
+            if(!(location).equals("")){
                 // addToSharedPreferences(location);
                 // We call Firebase method instead to save location for now.
-
-            }*/
+                saveLocationToFirebase(location);
+            }
             Intent intent = new Intent(MainActivity.this, RestaurantsListActivity.class);
             intent.putExtra("location_data", location);
             startActivity(intent);
@@ -108,10 +108,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // We define this method which calls upon the editor to write user's location input to
     // shared preferences.
-    /*private void addToSharedPreferences(String location) {
+    private void addToSharedPreferences(String location) {
         // We call the apply method to persist the location info in a key - value pair
         mEditor.putString(Constants.PREFERENCE_LOCATION_KEY, location).apply();
-    }*/
+    }
 
     // For practice purposes we will test out firebase with persisting location data
     public void saveLocationToFirebase(String location){
