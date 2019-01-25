@@ -38,6 +38,7 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     // Firebase manenos
     private DatabaseReference mSearchedLocationsReference;
+     private ValueEventListener mSearchedLocationReferenceListener;
 
     // Had not seen this. Had to initialize tag here.
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -74,7 +75,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .getReference()
                 .child(Constants.FIREBASE_CHILD_SEARCHED_LOCATION);
 
-        mSearchedLocationsReference.addValueEventListener(new ValueEventListener(){
+        // We assign the listening method to a listener var .
+        // We will use this to  destroy it when ou app exits.
+       mSearchedLocationReferenceListener = mSearchedLocationsReference.addValueEventListener(new ValueEventListener(){
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot){
@@ -102,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // Do something
             }
         });
+
         // Run default behaviours for an activity.
         super.onCreate(savedInstanceState);
 
@@ -151,5 +155,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // For practice purposes we will test out firebase with persisting location data
     public void saveLocationToFirebase(String location){
         mSearchedLocationsReference.push().setValue(location);
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        // We call the removeEventListener method on the DatabaseReference
+        // We then pass the ValueEventListener instance mSearchedLocation.
+        mSearchedLocationsReference.removeEventListener(mSearchedLocationReferenceListener);
     }
 }
