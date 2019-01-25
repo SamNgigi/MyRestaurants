@@ -84,6 +84,8 @@ dependencies {
     annotationProcessor 'org.parceler:parceler:1.1.12'
     // For the database functionality. core:16.0.6 is for analytics
     implementation 'com.google.firebase:firebase-database:16.0.5'
+    // firebase ui database
+    implementation 'com.firebaseui:firebase-ui-database:4.3.1'
     testImplementation 'junit:junit:4.12'
     testImplementation "org.robolectric:robolectric:4.1"
     testImplementation "com.squareup.okhttp3:mockwebserver:3.12.1"
