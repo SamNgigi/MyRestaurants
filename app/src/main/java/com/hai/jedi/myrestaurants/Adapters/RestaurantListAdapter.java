@@ -86,7 +86,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
     View.OnClickListener{
         // We use ButterKnife to bind all views in the layout
         @BindView( R.id.restaurantImageView) ImageView mRestaurantImageView;
-        @BindView(R.id.restaurantNameTextView) TextView mNameTextView;
+        @BindView(R.id.restaurantNameTextView) TextView nameTextView;
         @BindView(R.id.tagTxtView) TextView mTagTextView;
         @BindView(R.id.ratingTxtView) TextView mRatingTextView;
 
@@ -117,11 +117,11 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         // attributes specific to a restaurant.
         public void bindRestaurant(Restaurant restaurant){
             // It would seem that we do not need to pass mContext to the get()
-            Picasso.get().load(restaurant.getmImageUrl()).into(mRestaurantImageView);
-            mNameTextView.setText(restaurant.getmName());
-            mTagTextView.setText(restaurant.getmCategories().get(0));
-            // mTagTextView.setText(android.text.TextUtils.join(", ", restaurant.getmCategories()));
-            mRatingTextView.setText(String.format("Rating: %s/5", restaurant.getmRating()));
+            Picasso.get().load(restaurant.getImageUrl()).into(mRestaurantImageView);
+            nameTextView.setText(restaurant.getName());
+            mTagTextView.setText(restaurant.getCategories().get(0));
+            // mTagTextView.setText(android.text.TextUtils.join(", ", restaurant.getCategories()));
+            mRatingTextView.setText(String.format("Rating: %s/5", restaurant.getRating()));
         }
 
 

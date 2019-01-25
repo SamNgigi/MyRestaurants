@@ -15,7 +15,11 @@ import android.view.ViewGroup;
 
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.hai.jedi.myrestaurants.Constants;
 import com.hai.jedi.myrestaurants.R;
 import com.hai.jedi.myrestaurants.Models.Restaurant;
 
@@ -25,19 +29,24 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import android.widget.Toast;
 /**
  * A simple {@link Fragment} subclass.
  */
 public class RestaurantDetailFragment extends Fragment implements View.OnClickListener{
+    // Predefining the size of our images.
+    private static final int MAX_WIDTH = 200;
+    private static final int MAX_HEIGHT = 200;
 
     //Attaching the layout views to our logic
     @BindView(R.id.restaurantImageView) ImageView mImageLabel;
-    @BindView(R.id.restaurantNameTextView) TextView mNameLabel;
+    @BindView(R.id.restaurantNameTextView) TextView nameLabel;
     @BindView(R.id.tagTextView) TextView mTagLabel;
     @BindView(R.id.ratingTextView) TextView mRatingLabel;
     @BindView(R.id.urlTextView) TextView mUrlLabel;
-    @BindView(R.id.phoneTextView) TextView mPhoneLabel;
-    @BindView(R.id.addressTextView) TextView mAddressLabel;
+    @BindView(R.id.phoneTextView) TextView phoneLabel;
+    @BindView(R.id.addressTextView) TextView addressLabel;
     @BindView(R.id.saveRestaurantButton) TextView msSaveRestaurantButton;
 
     private Restaurant mRestaurant;
@@ -81,18 +90,24 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         View view = inflater.inflate(R.layout.fragment_restaurant_detail, container, false);
         ButterKnife.bind(this, view);
         // Attaching the various Restaurant object properties to the layout/view
-        Picasso.get().load(mRestaurant.getmImageUrl()).into(mImageLabel);
-        mNameLabel.setText(mRestaurant.getmName());
-        mTagLabel.setText(android.text.TextUtils.join(", ", mRestaurant.getmCategories()));
-        mRatingLabel.setText(String.format("%s/5",Double.toString(mRestaurant.getmRating())));
-        mPhoneLabel.setText(mRestaurant.getmPhone());
-        mAddressLabel.setText(android.text.TextUtils.join(", ", mRestaurant.getmAddresses()));
-        mUrlLabel.setText(mRestaurant.getmName());
+        // Loading images with picasso with predefined size and some style edit.
+        Picasso.get().load(mRestaurant.getImageUrl())
+                     .resize(MAX_WIDTH, MAX_HEIGHT)
+                     .centerCrop()
+                     .into(mImageLabel);
+
+        nameLabel.setText(mRestaurant.getName());
+        mTagLabel.setText(android.text.TextUtils.join(", ", mRestaurant.getCategories()));
+        mRatingLabel.setText(String.format("%s/5",Double.toString(mRestaurant.getRating())));
+        phoneLabel.setText(mRestaurant.getPhone());
+        addressLabel.setText(android.text.TextUtils.join(", ", mRestaurant.getAddresses()));
+        // mUrlLabel.setText(mRestaurant.getName());
 
         // We set OnClickListeners to website url phone and address
         mUrlLabel.setOnClickListener(this);
-        mPhoneLabel.setOnClickListener(this);
-        mAddressLabel.setOnClickListener(this);
+        phoneLabel.setOnClickListener(this);
+        addressLabel.setOnClickListener(this);
+        msSaveRestaurantButton.setOnClickListener(this);
         // We haven't the website url yet.
         return view;
     }
@@ -101,20 +116,27 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
     public void onClick(View view){
         if(view == mUrlLabel){
             Intent webIntent = new Intent(Intent.ACTION_VIEW,
-                                Uri.parse(mRestaurant.getmWebsite()));
+                                Uri.parse(mRestaurant.getWebsite()));
             startActivity(webIntent);
         }
-        if(view == mPhoneLabel) {
+        if(view == phoneLabel) {
             Intent phoneIntent = new Intent(Intent.ACTION_DIAL,
-                                Uri.parse("tel: " + mRestaurant.getmPhone()));
+                                Uri.parse("tel: " + mRestaurant.getPhone()));
             startActivity(phoneIntent);
         }
-        if(view == mAddressLabel){
+        if(view == addressLabel){
             Intent mapIntent = new Intent(Intent.ACTION_VIEW,
-                                Uri.parse("geo: " + mRestaurant.getmLatitude()
-                                            + "," + mRestaurant.getmLongitude()
-                                            +"?q=(" + mRestaurant.getmName() + ")"));
+                                Uri.parse("geo: " + mRestaurant.getLatitude()
+                                            + "," + mRestaurant.getLongitude()
+                                            +"?q=(" + mRestaurant.getName() + ")"));
             startActivity(mapIntent);
+        }
+        if(view == msSaveRestaurantButton) {
+            DatabaseReference restaurantRef = FirebaseDatabase
+                                             .getInstance()
+                                             .getReference(Constants.FIREBASE_CHILD_RESTAURANTS);
+            restaurantRef.push().setValue(mRestaurant);
+            Toast.makeText(getContext(), "Saved", Toast.LENGTH_LONG).show();
         }
     }
 

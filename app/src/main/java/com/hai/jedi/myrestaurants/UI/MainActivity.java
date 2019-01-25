@@ -91,7 +91,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                      * We loop through all the locations stored on the searchLocation node by calling
                      * the getChildren() method on the dataSnapshot of the node
                      *
-                     * We then get the value of each child node.*/
+                     * We then get the value of each child node.
+                     *
+                     * This is how we read data from Firebase db*/
 
                     String location = Objects.requireNonNull(locationSnapShot.getValue()).toString();
                     Log.d("Locations updated ->", "LOCATION: " + location);
