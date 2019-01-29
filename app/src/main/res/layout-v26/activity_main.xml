@@ -42,7 +42,7 @@
         android:autofillHints="" />
 
     <Button
-        android:id="@+id/restaurantsSavedButton"
+        android:id="@+id/savedRestaurantButton"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="@string/btn2_text"

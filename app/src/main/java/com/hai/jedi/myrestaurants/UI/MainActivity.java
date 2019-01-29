@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -48,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @BindView(R.id.findRestaurantsButton) Button mFindRestaurantsButton;
 
-    @BindView(R.id.restaurantsSavedButton) Button savedRestaurantsButton;
+    @BindView(R.id.savedRestaurantButton) Button mSavedRestaurantsButton;
 
     @BindView(R.id.editLocationText) EditText mLocationEditText;
 
@@ -78,10 +77,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .getReference()
                 .child(Constants.FIREBASE_CHILD_SEARCHED_LOCATION);
 
-
         // We assign the listening method to a listener var .
         // We will use this to  destroy it when ou app exits.
-       mSearchedLocationReferenceListener = mSearchedLocationsReference.addValueEventListener(new ValueEventListener(){
+        mSearchedLocationReferenceListener = mSearchedLocationsReference.addValueEventListener(new ValueEventListener(){
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot){
@@ -116,22 +114,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
         ButterKnife.bind(this);
 
-       mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-       mEditor = mSharedPreferences.edit();
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mEditor = mSharedPreferences.edit();
 
         // Getting our font
         Typeface ostrich_font = Typeface.createFromAsset(
-                               getAssets(), "fonts/ostrich-regular.ttf");
+                getAssets(), "fonts/ostrich-regular.ttf");
         // Setting our font at runtime.
         welcome_text.setTypeface(ostrich_font);
 
         // We listen for a click then implement View.OnClickListener's onClick() method.
         mFindRestaurantsButton.setOnClickListener(this);
-
-        // We listen for a to the saved restaurantButton
-        savedRestaurantsButton.setOnClickListener(this);
+        mSavedRestaurantsButton.setOnClickListener(this);
 
     }
 
@@ -151,8 +148,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             intent.putExtra("location_data", location);
             startActivity(intent);
         }
-        if(v == savedRestaurantsButton){
-            Intent intent = new Intent(MainActivity.this, SavedRestaurantsListActivity.class);
+        if(v == mSavedRestaurantsButton){
+            Intent intent = new Intent(MainActivity.this,
+                    SavedRestaurantsListActivity.class);
             startActivity(intent);
         }
     }

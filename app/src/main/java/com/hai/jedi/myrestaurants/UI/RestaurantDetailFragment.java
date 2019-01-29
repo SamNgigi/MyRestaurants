@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.hai.jedi.myrestaurants.Constants;
 import com.hai.jedi.myrestaurants.R;
 import com.hai.jedi.myrestaurants.Models.Restaurant;
@@ -31,6 +35,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Objects;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -47,7 +55,7 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
     @BindView(R.id.urlTextView) TextView mUrlLabel;
     @BindView(R.id.phoneTextView) TextView phoneLabel;
     @BindView(R.id.addressTextView) TextView addressLabel;
-    @BindView(R.id.saveRestaurantButton) TextView msSaveRestaurantButton;
+    @BindView(R.id.saveRestaurantButton) TextView mSaveRestaurantButton;
 
     private Restaurant mRestaurant;
 
@@ -107,7 +115,7 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         mUrlLabel.setOnClickListener(this);
         phoneLabel.setOnClickListener(this);
         addressLabel.setOnClickListener(this);
-        msSaveRestaurantButton.setOnClickListener(this);
+        mSaveRestaurantButton.setOnClickListener(this);
         // We haven't the website url yet.
         return view;
     }
@@ -131,12 +139,44 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
                                             +"?q=(" + mRestaurant.getName() + ")"));
             startActivity(mapIntent);
         }
-        if(view == msSaveRestaurantButton) {
+        if(view == mSaveRestaurantButton) {
+
             DatabaseReference restaurantRef = FirebaseDatabase
                                              .getInstance()
                                              .getReference(Constants.FIREBASE_CHILD_RESTAURANTS);
-            restaurantRef.push().setValue(mRestaurant);
-            Toast.makeText(getContext(), "Saved", Toast.LENGTH_LONG).show();
+
+            restaurantRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot){
+                    final ArrayList<String> restaurants = new ArrayList<>();
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                        restaurants.add(Objects.requireNonNull(snapshot.getValue(Restaurant.class))
+                                   .getName());
+
+                    }
+
+                    Log.d("CAN YOU SEE ME", restaurants.toString());
+                    Log.d("CAN YOU SEE ME",
+                            Boolean.toString(restaurants.contains(mRestaurant.getName())));
+
+                    if(restaurants.contains(mRestaurant.getName())){
+                        Toast.makeText(getContext(),
+                                "Restaurant is already saved",
+                                Toast.LENGTH_LONG).show();
+                    } else {
+                        restaurantRef.push().setValue(mRestaurant);
+                        Toast.makeText(getContext(), "Saved", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError dbError){
+                    // do something
+                }
+            });
+
         }
     }
 

@@ -1,18 +1,18 @@
 package com.hai.jedi.myrestaurants.UI;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.hai.jedi.myrestaurants.Models.Restaurant;
+import com.google.firebase.database.FirebaseDatabase;
 import com.hai.jedi.myrestaurants.Adapters.FirebaseRestaurantViewHolder;
 import com.hai.jedi.myrestaurants.Constants;
+import com.hai.jedi.myrestaurants.Models.Restaurant;
 import com.hai.jedi.myrestaurants.R;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
 
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseReference;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -26,73 +26,51 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class SavedRestaurantsListActivity extends AppCompatActivity {
-
-    // Initializing our DatabaseReference and FirebaseRecyclerAdapter
     private DatabaseReference mRestaurantReference;
-    private FirebaseRecyclerAdapter<Restaurant, FirebaseRestaurantViewHolder> mFirebaseAdapter;
-    // Initializing our RecyclerView member
+    private FirebaseRecyclerAdapter mFirebaseAdapter;
+
     @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        // We point it to activity restaurants which has the recyclerView that we use with the
-        // RestaurantListActivity
         setContentView(R.layout.activity_restaurants);
-        /**
-         * So normally we get this  below error when we are pointing to the wrong id because we are
-         * using the wrong resource
-         *
-         * Caused by: java.lang.IllegalStateException:
-         * Required view 'recyclerView' with ID 2131165331 for field 'mRecyclerView' was not found.
-         * If this view is optional add '@Nullable' (fields) or '@Optional' (methods) annotation.
-         *
-         * */
+
         ButterKnife.bind(this);
 
-//        assert mRecyclerView != null;
-
-        // Calling our firebase adapter that we create below
         setUpFirebaseAdapter();
     }
 
     private void setUpFirebaseAdapter(){
 
-        // Our database reference instance
-        mRestaurantReference = FirebaseDatabase
-                .getInstance()
-                .getReference()
-                .child(Constants.FIREBASE_CHILD_RESTAURANTS);
+        mRestaurantReference = FirebaseDatabase.getInstance()
+                .getReference(Constants.FIREBASE_CHILD_RESTAURANTS);
 
-        // Declaring our firebase options which include the db restaurant reference
-        // and the restaurant class
-        FirebaseRecyclerOptions<Restaurant> restaurantOptions = new FirebaseRecyclerOptions
-                                                    .Builder<Restaurant>()
-                                                    .setQuery(mRestaurantReference, Restaurant.class)
-                                                    .build();
+        FirebaseRecyclerOptions<Restaurant> options = new FirebaseRecyclerOptions
+                .Builder<Restaurant>()
+                .setQuery(mRestaurantReference, Restaurant.class)
+                .build();
 
-        // Binding our persisted restaurants to our firebase restaurant vie holder.
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<Restaurant, FirebaseRestaurantViewHolder>(restaurantOptions) {
-
-            // Defining how and where our persisted restaurant data will be viewed.
+        mFirebaseAdapter = new FirebaseRecyclerAdapter<Restaurant, FirebaseRestaurantViewHolder>(options) {
             @Override
-            public FirebaseRestaurantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
+            protected void onBindViewHolder(@NonNull FirebaseRestaurantViewHolder frViewHolder,
+                                            int position, @NonNull Restaurant model) {
+                frViewHolder.bindRestaurant(model);
+            }
+
+            @NonNull
+            @Override
+            public FirebaseRestaurantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.restaurant_list_item, parent, false);
                 return new FirebaseRestaurantViewHolder(view);
             }
-
-            @Override
-            protected void onBindViewHolder(@NonNull FirebaseRestaurantViewHolder viewHolder,
-                                            int position, @NonNull Restaurant model){
-                viewHolder.bindRestaurant(model);
-            }
-
-
         };
+
+        mRecyclerView.setAdapter(mFirebaseAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(mFirebaseAdapter);
     }
 
     @Override
@@ -106,4 +84,5 @@ public class SavedRestaurantsListActivity extends AppCompatActivity {
         super.onStop();
         mFirebaseAdapter.stopListening();
     }
+
 }
