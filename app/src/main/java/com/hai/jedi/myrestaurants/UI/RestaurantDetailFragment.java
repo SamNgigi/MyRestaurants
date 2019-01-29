@@ -159,7 +159,10 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
                     Log.d("CAN YOU SEE ME", restaurants.toString());
                     Log.d("CAN YOU SEE ME",
                             Boolean.toString(restaurants.contains(mRestaurant.getName())));
-
+                    /**
+                     * We have to use the string property of the restaurant object because
+                     * the object itself is not unique enough to check if object exists
+                     * */
                     if(restaurants.contains(mRestaurant.getName())){
                         Toast.makeText(getContext(),
                                 "Restaurant is already saved",
