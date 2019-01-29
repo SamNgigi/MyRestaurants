@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -38,7 +39,7 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     // Firebase manenos
     private DatabaseReference mSearchedLocationsReference;
-     private ValueEventListener mSearchedLocationReferenceListener;
+    private ValueEventListener mSearchedLocationReferenceListener;
 
     // Had not seen this. Had to initialize tag here.
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @BindView( R.id.sample_text) TextView welcome_text;
 
     @BindView(R.id.findRestaurantsButton) Button mFindRestaurantsButton;
+
+    @BindView(R.id.restaurantsSavedButton) Button savedRestaurantsButton;
 
     @BindView(R.id.editLocationText) EditText mLocationEditText;
 
@@ -74,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .getInstance()
                 .getReference()
                 .child(Constants.FIREBASE_CHILD_SEARCHED_LOCATION);
+
 
         // We assign the listening method to a listener var .
         // We will use this to  destroy it when ou app exits.
@@ -112,8 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
-       ButterKnife.bind(this);
+        ButterKnife.bind(this);
 
        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
        mEditor = mSharedPreferences.edit();
@@ -126,6 +129,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // We listen for a click then implement View.OnClickListener's onClick() method.
         mFindRestaurantsButton.setOnClickListener(this);
+
+        // We listen for a to the saved restaurantButton
+        savedRestaurantsButton.setOnClickListener(this);
 
     }
 
@@ -143,6 +149,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             Intent intent = new Intent(MainActivity.this, RestaurantsListActivity.class);
             intent.putExtra("location_data", location);
+            startActivity(intent);
+        }
+        if(v == savedRestaurantsButton){
+            Intent intent = new Intent(MainActivity.this, SavedRestaurantsListActivity.class);
             startActivity(intent);
         }
     }

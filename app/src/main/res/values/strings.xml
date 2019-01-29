@@ -2,6 +2,7 @@
     <string name="app_name">MyRestaurants</string>
     <string name="hello">Hello Restaurants</string>
     <string name="btn1_text">Find Restaurants</string>
+    <string name="btn2_text">Saved Restaurants</string>
     <string name="img_desc">Mine</string>
     <string name="input_text">Enter Zip Code</string>
 

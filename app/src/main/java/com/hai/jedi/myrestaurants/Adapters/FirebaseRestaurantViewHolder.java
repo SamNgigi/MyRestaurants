@@ -11,6 +11,7 @@ import com.squareup.picasso.Picasso;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 
 import android.widget.ImageView;
@@ -49,6 +50,7 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder
 
     // Bind the Restaurant details to our restaurant view
     public void bindRestaurant (Restaurant restaurant){
+        Log.d("CAN YOU SEE ME", restaurant.toString());
         ImageView restaurantImageView = (ImageView) mView.findViewById(R.id.restaurantImageView);
         TextView nameTextView = (TextView) mView.findViewById(R.id.restaurantNameTextView);
         TextView tagTextView = (TextView) mView.findViewById(R.id.tagTextView);

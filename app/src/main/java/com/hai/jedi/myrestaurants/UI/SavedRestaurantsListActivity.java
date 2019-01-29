@@ -29,21 +29,28 @@ public class SavedRestaurantsListActivity extends AppCompatActivity {
 
     // Initializing our DatabaseReference and FirebaseRecyclerAdapter
     private DatabaseReference mRestaurantReference;
-    private FirebaseRecyclerAdapter mFirebaseAdapter;
+    private FirebaseRecyclerAdapter<Restaurant, FirebaseRestaurantViewHolder> mFirebaseAdapter;
     // Initializing our RecyclerView member
     @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_saved_restaurants_list);
-
+        // We point it to activity restaurants which has the recyclerView that we use with the
+        // RestaurantListActivity
+        setContentView(R.layout.activity_restaurants);
+        /**
+         * So normally we get this  below error when we are pointing to the wrong id because we are
+         * using the wrong resource
+         *
+         * Caused by: java.lang.IllegalStateException:
+         * Required view 'recyclerView' with ID 2131165331 for field 'mRecyclerView' was not found.
+         * If this view is optional add '@Nullable' (fields) or '@Optional' (methods) annotation.
+         *
+         * */
         ButterKnife.bind(this);
 
-        // Our database reference instance
-        mRestaurantReference = FirebaseDatabase
-                               .getInstance()
-                               .getReference(Constants.FIREBASE_CHILD_RESTAURANTS);
+//        assert mRecyclerView != null;
 
         // Calling our firebase adapter that we create below
         setUpFirebaseAdapter();
@@ -51,9 +58,15 @@ public class SavedRestaurantsListActivity extends AppCompatActivity {
 
     private void setUpFirebaseAdapter(){
 
+        // Our database reference instance
+        mRestaurantReference = FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .child(Constants.FIREBASE_CHILD_RESTAURANTS);
+
         // Declaring our firebase options which include the db restaurant reference
         // and the restaurant class
-        FirebaseRecyclerOptions restaurantOptions = new FirebaseRecyclerOptions
+        FirebaseRecyclerOptions<Restaurant> restaurantOptions = new FirebaseRecyclerOptions
                                                     .Builder<Restaurant>()
                                                     .setQuery(mRestaurantReference, Restaurant.class)
                                                     .build();
@@ -62,7 +75,6 @@ public class SavedRestaurantsListActivity extends AppCompatActivity {
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Restaurant, FirebaseRestaurantViewHolder>(restaurantOptions) {
 
             // Defining how and where our persisted restaurant data will be viewed.
-            @NonNull
             @Override
             public FirebaseRestaurantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
                 View view = LayoutInflater.from(parent.getContext())
@@ -78,9 +90,8 @@ public class SavedRestaurantsListActivity extends AppCompatActivity {
 
 
         };
-
-        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mFirebaseAdapter);
     }
 

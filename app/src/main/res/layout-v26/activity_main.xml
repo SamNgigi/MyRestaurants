@@ -12,19 +12,24 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:contentDescription="@string/img_desc"
-        android:src="@drawable/mine"
+        android:src="@drawable/my_restaurant"
         android:scaleType="centerCrop"/>
 
     <TextView
         android:id="@+id/sample_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="210dp"
         android:text="@string/hello"
-        android:textColor="@color/textIcons" />
+        android:textColor="@color/textIcons"
+        android:textSize="45sp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/editLocationText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/findRestaurantsButton"
         android:layout_centerHorizontal="true"
@@ -37,15 +42,32 @@
         android:autofillHints="" />
 
     <Button
+        android:id="@+id/restaurantsSavedButton"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/btn2_text"
+        android:background="@color/primary"
+        android:textColor="@color/primaryLight"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:padding="10dp"
+        android:layout_marginBottom="17dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"/>
+
+    <Button
         android:id="@+id/findRestaurantsButton"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="@string/btn1_text"
         android:background="@color/btn2"
         android:textColor="@color/primaryLight"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:layout_marginBottom="17dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"/>
 
 
 </RelativeLayout>

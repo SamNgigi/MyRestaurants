@@ -42,16 +42,5 @@
         android:padding="5dp"
         tools:targetApi="o" />
 
-    <Button
-        android:id="@+id/findRestaurantsButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@color/btn2"
-        android:padding="10dp"
-        android:text="@string/btn1_text"
-        android:textColor="@color/textIcons" />
-
 
 </RelativeLayout>

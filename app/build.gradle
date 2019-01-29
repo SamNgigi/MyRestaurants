@@ -5,7 +5,8 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.hai.jedi.myrestaurants"
-        minSdkVersion 15
+        // We changed this minSdkVersion to 16 because of updated  firebase ui doesn't work with 15
+        minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -77,15 +78,15 @@ dependencies {
     implementation 'se.akerfeldt:okhttp-signpost:1.1.0'
     implementation 'oauth.signpost:signpost-core:1.2.1.2'
     implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'com.jakewharton:butterknife:10.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.jakewharton:butterknife:10.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
     implementation 'org.parceler:parceler-api:1.1.12'
     annotationProcessor 'org.parceler:parceler:1.1.12'
-    // firebase ui database
-    implementation 'com.firebaseui:firebase-ui-database:4.3.1'
     // For the database functionality. core:16.0.6 is for analytics
     implementation 'com.google.firebase:firebase-database:16.0.5'
+    // firebase ui database
+    implementation 'com.firebaseui:firebase-ui-database:4.3.1'
     testImplementation 'junit:junit:4.12'
     testImplementation "org.robolectric:robolectric:4.1"
     testImplementation "com.squareup.okhttp3:mockwebserver:3.12.1"
@@ -97,3 +98,4 @@ dependencies {
 
 // This plugin needs to be added at the bottom
 apply plugin: 'com.google.gms.google-services'
+
