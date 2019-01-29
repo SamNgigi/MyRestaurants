@@ -30,9 +30,12 @@ import java.util.ArrayList;
 
 public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener{
+
+    // Static variable to hold the height and width of our images for Picasso
     private static final int MAX_WIDTH = 200;
     private static final int MAX_HEIGHT = 200;
 
+    // Adding member variables to hold the view and context which we set in our constructor
     View mView;
     Context mContext;
 
@@ -40,9 +43,11 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder
         super(itemView);
         mView = itemView;
         mContext = itemView.getContext();
+        // Add a click listener when an itemView is clicked
         itemView.setOnClickListener(this);
     }
 
+    // Bind the Restaurant details to our restaurant view
     public void bindRestaurant (Restaurant restaurant){
         ImageView restaurantImageView = (ImageView) mView.findViewById(R.id.restaurantImageView);
         TextView nameTextView = (TextView) mView.findViewById(R.id.restaurantNameTextView);
@@ -59,12 +64,14 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder
         ratingTextView.setText(String.format("Rating: %s/5", restaurant.getRating()));
     }
 
+    // onClick method where we create a Firebase singleValueEventListener
     @Override
     public void onClick(View view) {
         final ArrayList<Restaurant> restaurants = new ArrayList<>();
         DatabaseReference dbRef = FirebaseDatabase.getInstance()
                                                 .getReference(Constants.FIREBASE_CHILD_RESTAURANTS);
-
+        // Here we grab the currently clicked item from our restaurant list and pass that
+        // along as an intent to our RestaurantDetailActivity.
         dbRef.addListenerForSingleValueEvent(new ValueEventListener(){
            @Override
            public void onDataChange(@NonNull DataSnapshot dataSnapshot){
