@@ -83,8 +83,14 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
     implementation 'org.parceler:parceler-api:1.1.12'
     annotationProcessor 'org.parceler:parceler:1.1.12'
+    // Firebase authentication
+    implementation 'com.google.firebase:firebase-auth:16.1.0'
+    // For enabling email link
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
     // For the database functionality. core:16.0.6 is for analytics
     implementation 'com.google.firebase:firebase-database:16.0.5'
+    // Pre-built ui for authentication
+    implementation 'com.firebaseui:firebase-ui-auth:4.1.0'
     // firebase ui database
     implementation 'com.firebaseui:firebase-ui-database:4.3.1'
     testImplementation 'junit:junit:4.12'
@@ -98,4 +104,3 @@ dependencies {
 
 // This plugin needs to be added at the bottom
 apply plugin: 'com.google.gms.google-services'
-
