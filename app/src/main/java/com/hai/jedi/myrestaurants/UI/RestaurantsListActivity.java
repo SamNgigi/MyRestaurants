@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import android.widget.TextView;
+
 import okhttp3.Callback;
 import okhttp3.Call;
 import okhttp3.Response;
@@ -41,9 +43,10 @@ public class RestaurantsListActivity extends AppCompatActivity {
 
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
-    private String mRecentAddresses;
 
     @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
+    @BindView(R.id.listText) TextView listText;
+
     private RestaurantListAdapter mAdapter;
     public ArrayList<Restaurant> mRestaurants = new ArrayList<>();
 
@@ -55,19 +58,21 @@ public class RestaurantsListActivity extends AppCompatActivity {
 
     // We pull the data out of our restaurant_activity_intent that we declared in our MainActivity
         Intent restaurant_activity_intent = getIntent();
-
     // We retrieve the location info using our key "location_data"
         String location = restaurant_activity_intent.getStringExtra("location_data");
+
+
         // Log.d("WE ARE HERE: " , location);
         getRestaurants(location);
         // Testing to see if the location can be retrieved from the SharedPreferences
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mRecentAddresses = mSharedPreferences.getString(Constants.PREFERENCE_LOCATION_KEY,
+        String mRecentAddresses = mSharedPreferences.getString(Constants.PREFERENCE_LOCATION_KEY,
                 null);
         // Log.d("Shared Pref Location", mRecentAddress);
         if(mRecentAddresses != null){
+            listText.setText(String.format("Here are the 20 popular restaurants in %s.", mRecentAddresses));
             // Parse our shared preferences to our get restaurant method
-            getRestaurants(location);
+            getRestaurants(mRecentAddresses);
         }
     }
 
@@ -96,6 +101,9 @@ public class RestaurantsListActivity extends AppCompatActivity {
                  * and not every time they type a single character into the field, we'll place our
                  * logic in the onQueryTextSubmit and leave the onQueryTextChange fairly empty.
                  * */
+                if(query != null){
+                    listText.setText(String.format("Here are the 20 popular restaurants in %s.", query));
+                }
                 // Adding our query to sharedPreferences
                 addToSharedPreferences(query);
                 //getting our restaurants

@@ -31,5 +31,8 @@
         <item name="android:textColor">@color/textIcons</item>
     </style>
 
+    <style name="SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="menu">@menu/menu_search</item>
+    </style>
 
 </resources>

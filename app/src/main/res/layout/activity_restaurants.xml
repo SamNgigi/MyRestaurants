@@ -7,6 +7,14 @@
     android:padding="16dp"
     tools:context=".UI.RestaurantsListActivity">
 
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="@string/test_string"
+        android:id="@+id/listText"/>
+
     <!--
     This is a newer Android ViewGroup object meant to render
     any adapter-based view.
@@ -21,7 +29,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/recyclerView">
+        android:id="@+id/recyclerView"
+        android:paddingTop="40dp">
     </androidx.recyclerview.widget.RecyclerView>
 
 
