@@ -2,12 +2,18 @@ package com.hai.jedi.myrestaurants.UI;
 
 import android.content.Intent;
 
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -27,14 +33,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import android.util.Log;
+//import android.widget.SearchView;
 
 public class RestaurantsListActivity extends AppCompatActivity {
     // Logging Constant for debugging
     public static final String TAG = RestaurantsListActivity.class.getSimpleName();
 
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
+    private String mRecentAddresses;
+
     @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
     private RestaurantListAdapter mAdapter;
-
     public ArrayList<Restaurant> mRestaurants = new ArrayList<>();
 
     @Override
@@ -48,20 +58,67 @@ public class RestaurantsListActivity extends AppCompatActivity {
 
     // We retrieve the location info using our key "location_data"
         String location = restaurant_activity_intent.getStringExtra("location_data");
-        Log.d("WHE ARE HERE: " , location);
+        // Log.d("WE ARE HERE: " , location);
         getRestaurants(location);
         // Testing to see if the location can be retrieved from the SharedPreferences
-        /*SharedPreferences mSharedPreference = PreferenceManager.getDefaultSharedPreferences(this);
-        String mRecentAddress = mSharedPreference.getString(Constants.PREFERENCE_LOCATION_KEY,
-                null);*/
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mRecentAddresses = mSharedPreferences.getString(Constants.PREFERENCE_LOCATION_KEY,
+                null);
         // Log.d("Shared Pref Location", mRecentAddress);
-        /*if(mRecentAddress != null){
+        if(mRecentAddresses != null){
             // Parse our shared preferences to our get restaurant method
-
-        }*/
+            getRestaurants(location);
+        }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        // Binding our views
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_search, menu);
+        ButterKnife.bind(this);
 
+        // Accessing our shared preferences and enabling edits
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mEditor = mSharedPreferences.edit();
+
+        // Retrieving a users search
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+            @Override
+            public boolean onQueryTextSubmit(String query){
+                /**
+                 * This method is run automatically when the user submits a query into our SearchView.
+                 *
+                 * Because we only want to gather the input after the user has submitted something
+                 * and not every time they type a single character into the field, we'll place our
+                 * logic in the onQueryTextSubmit and leave the onQueryTextChange fairly empty.
+                 * */
+                // Adding our query to sharedPreferences
+                addToSharedPreferences(query);
+                //getting our restaurants
+                getRestaurants(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText){
+                // This method is run whenever any changes to the SearchView content occurs
+                return false;
+            }
+        });
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        // This ensures that all functionality from the parent class will still apply despite us
+        // manually overriding portions of the menu functionality
+        return super.onOptionsItemSelected(item);
+    }
 
 
     private void getRestaurants(String location) {
@@ -95,6 +152,11 @@ public class RestaurantsListActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void addToSharedPreferences(String location) {
+        mEditor.putString(Constants.PREFERENCE_LOCATION_KEY, location).apply();
+    }
+
 
 }
 

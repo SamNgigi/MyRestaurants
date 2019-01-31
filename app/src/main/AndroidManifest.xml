@@ -14,13 +14,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".UI.LoginActivity">
-            <intent-filter>
 
-                <!-- Main activity is called first when app is launched -->
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".UI.CreateAccountActivity" />
         <activity android:name=".UI.SavedRestaurantsListActivity" />
@@ -28,6 +22,13 @@
         <activity
             android:name=".UI.MainActivity"
             android:theme="@style/NoActionBarTheme">
+            <intent-filter>
+
+                <!-- Main activity is called first when app is launched -->
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".UI.RestaurantsListActivity">
 
