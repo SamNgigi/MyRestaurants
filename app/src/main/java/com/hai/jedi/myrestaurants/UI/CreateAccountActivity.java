@@ -7,6 +7,7 @@ import com.hai.jedi.myrestaurants.R;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import android.content.Intent;
@@ -36,6 +37,8 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
     // Add an mAuthListener member var
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    private ProgressDialog mAuthProgressDialog;
+
     @BindView(R.id.signUpButton) Button mCreateUserButton;
     @BindView(R.id.nameEditText) EditText mNameEditText;
     @BindView(R.id.emailEditText) EditText mEmailEditText;
@@ -59,6 +62,15 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         mLoginHere.setOnClickListener(this);
 
         createAuthStateListener();
+
+        createAuthProgressDialog();
+    }
+
+    public void createAuthProgressDialog(){
+        mAuthProgressDialog = new ProgressDialog(this);
+        mAuthProgressDialog.setTitle("Loading...");
+        mAuthProgressDialog.setMessage("Authenticating with Firebase...");
+        mAuthProgressDialog.setCancelable(false);
     }
 
     @Override
@@ -122,12 +134,19 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         // Not exactly how below code would work.
         if(!validEmail || !validName || !validPassword) return;
 
+        // Showing the progress dialog
+        mAuthProgressDialog.show();
+
         // Firebase method to create a new user account in Firebase passing user's
         // password and email
         mAuth.createUserWithEmailAndPassword(email, password)
              .addOnCompleteListener(this, new OnCompleteListener<AuthResult>(){
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task){
+
+                        // Dismissing the progress dialog
+                        mAuthProgressDialog.dismiss();
+
                         if (task.isSuccessful()){
                             Log.d(TAG, "Authentication successful");
                         }
