@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.BindView;
@@ -43,6 +44,11 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
     public void onClick(View view){
         if(view == mCreateUserButton){
             // createNewUser();
+            Toast.makeText(
+                    CreateAccountActivity.this,
+                    "About to create user",
+                    Toast.LENGTH_LONG
+            ).show();
         }
         if(view == mLoginHere){
             Intent intent = new Intent(CreateAccountActivity.this, LoginActivity.class);
