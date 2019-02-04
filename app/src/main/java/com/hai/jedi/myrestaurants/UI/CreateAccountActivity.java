@@ -78,6 +78,7 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         final String name = nNameEditText.getText().toString().trim();
         final String email = nEmailEditText.getText().toString().trim();
         String password = mPasswordEditText.getText().toString().trim();
+
         String confirmPassword = mConfirmPasswordEditText.getText().toString().trim();
 
         // Firebase method to create a new user account in Firebase passing user's
