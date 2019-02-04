@@ -96,7 +96,7 @@
         android:layout_height="wrap_content"
         android:text="@string/create_account"
         android:textColor="@color/textIcons"
-        android:padding="30dp"
+        android:padding="20dp"
         android:textSize="30sp"
         android:textStyle="bold"
         android:layout_above="@+id/linearLayout"
