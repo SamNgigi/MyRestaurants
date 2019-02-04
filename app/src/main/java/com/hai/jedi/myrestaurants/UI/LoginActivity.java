@@ -4,6 +4,7 @@ import com.hai.jedi.myrestaurants.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
@@ -32,11 +33,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view){
         if (view == signUpHere){
-            Toast.makeText(
-                    LoginActivity.this,
-                    "Working!!",
-                    Toast.LENGTH_LONG)
-                .show();
+            Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 }
