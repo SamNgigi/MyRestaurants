@@ -27,9 +27,7 @@
         <activity android:name=".UI.SavedRestaurantsListActivity" />
         <activity android:name=".UI.RestaurantDetailActivity" />
         <activity
-            android:name=".UI.MainActivity"
-            android:theme="@style/NoActionBarTheme">
-
+            android:name=".UI.MainActivity">
         </activity>
         <activity android:name=".UI.RestaurantsListActivity">
 

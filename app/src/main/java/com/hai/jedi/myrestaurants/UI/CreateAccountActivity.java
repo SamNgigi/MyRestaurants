@@ -133,6 +133,12 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onStart(){
         super.onStart();
+        // When we add this listener in the onStart method our app immediately brings us to the Main
+        // Activity. This is because this method checks to see if a user has already been
+        // authenticated.
+
+        // Because we create a user moments ago our authStateListener brings them to the Main
+        // Activity ,.
         mAuth.addAuthStateListener(mAuthListener);
     }
 
