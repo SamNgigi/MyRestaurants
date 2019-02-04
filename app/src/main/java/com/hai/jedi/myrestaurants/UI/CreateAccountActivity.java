@@ -37,8 +37,8 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     @BindView(R.id.signUpButton) Button mCreateUserButton;
-    @BindView(R.id.nameEditText) EditText nNameEditText;
-    @BindView(R.id.emailEditText) EditText nEmailEditText;
+    @BindView(R.id.nameEditText) EditText mNameEditText;
+    @BindView(R.id.emailEditText) EditText mEmailEditText;
     @BindView(R.id.passwordEditText) EditText mPasswordEditText;
     @BindView(R.id.confirmPasswordEditText) EditText mConfirmPasswordEditText;
     @BindView(R.id.loginHere) TextView mLoginHere;
@@ -79,12 +79,48 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    private void createNewUser(){
-        final String name = nNameEditText.getText().toString().trim();
-        final String email = nEmailEditText.getText().toString().trim();
-        String password = mPasswordEditText.getText().toString().trim();
+    // VALIDATING USER EMAIL AND PASSWORD.
+    private boolean isValidEmail(String email){
+        boolean validEmail = (email !=null &&
+                android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches());
+        if(!validEmail){
+            mEmailEditText.setError("Please enter a valid email address");
+            return false;
+        }
+        return validEmail;
+    }
 
+    private boolean isValidName(String name){
+        if(name.equals("")){
+            mNameEditText.setError("Please enter you name");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isValidPassword(String password, String confirmPassword){
+        if(password.length() < 8){
+            mPasswordEditText.setError("Please create a password containing at least 8 characters");
+            return false;
+        }
+        else if (!password.equals(confirmPassword)){
+            mPasswordEditText.setError("Passwords do not match");
+            return false;
+        }
+        return true;
+    }
+
+    private void createNewUser(){
+        final String name = mNameEditText.getText().toString().trim();
+        final String email = mEmailEditText.getText().toString().trim();
+        String password = mPasswordEditText.getText().toString().trim();
         String confirmPassword = mConfirmPasswordEditText.getText().toString().trim();
+
+        boolean validName = isValidName(name);
+        boolean validEmail = isValidEmail(email);
+        boolean validPassword = isValidPassword(password, confirmPassword);
+        // Not exactly how below code would work.
+        if(!validEmail || !validName || !validPassword) return;
 
         // Firebase method to create a new user account in Firebase passing user's
         // password and email
@@ -106,6 +142,8 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
              }
          );
     }
+
+
 
     private void createAuthStateListener () {
         // This listens to changes in the current AuthState.
