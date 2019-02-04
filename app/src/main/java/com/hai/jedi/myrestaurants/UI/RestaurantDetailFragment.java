@@ -149,7 +149,9 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot){
                     final ArrayList<String> restaurants = new ArrayList<>();
-
+                    // This loop might be working to slow.
+                    // When you save before the api call can check, the same restaurant is persisted
+                    // twice.
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                         restaurants.add(Objects.requireNonNull(snapshot.getValue(Restaurant.class))
                                    .getName());

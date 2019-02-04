@@ -63,7 +63,7 @@ public class RestaurantsListActivity extends AppCompatActivity {
 
 
         // Log.d("WE ARE HERE: " , location);
-        getRestaurants(location);
+        // getRestaurants(location);
         // Testing to see if the location can be retrieved from the SharedPreferences
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String mRecentAddresses = mSharedPreferences.getString(Constants.PREFERENCE_LOCATION_KEY,
