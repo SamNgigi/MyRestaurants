@@ -6,6 +6,7 @@ import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
@@ -19,14 +20,20 @@ import android.widget.TextView;
 
 import android.graphics.Typeface;
 
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import com.hai.jedi.myrestaurants.R;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
+
+import androidx.annotation.NonNull;
 
 // We implement the built in OnClickListener here
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -39,6 +46,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @BindView(R.id.findRestaurantsButton) Button mFindRestaurantsButton;
 
     @BindView(R.id.savedRestaurantButton) Button mSavedRestaurantsButton;
+
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
+    private static final int SCREEN_TIME_OUT = 2000;
 
     // Used to load the 'native-lib' library on application startup.
     protected void loadNativeLibraries() {
@@ -70,6 +82,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFindRestaurantsButton.setOnClickListener(this);
         mSavedRestaurantsButton.setOnClickListener(this);
 
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        if (user != null ){
+                            Objects.requireNonNull(getSupportActionBar()).setTitle(
+                                    String.format("Welcome, %s", user.getDisplayName())
+                            );
+                        }
+                    }
+                }, SCREEN_TIME_OUT);
+            }
+        };
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        if(mAuthListener != null){
+//            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 
     @Override

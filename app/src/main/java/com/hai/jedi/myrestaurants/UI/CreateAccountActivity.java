@@ -30,6 +30,8 @@ import com.google.android.gms.tasks.Task;
 
 import android.util.Log;
 
+import java.util.Objects;
+
 public class CreateAccountActivity extends AppCompatActivity implements View.OnClickListener{
 
     public static final String TAG = CreateAccountActivity.class.getSimpleName();
@@ -64,9 +66,17 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         createAuthStateListener();
         createAuthProgressDialog();
 
-        mCreateUserButton.setOnClickListener(this);
         mLoginHere.setOnClickListener(this);
+        mCreateUserButton.setOnClickListener(this);
 
+    }
+
+    // Progress animation
+    public void createAuthProgressDialog(){
+        mAuthProgressDialog = new ProgressDialog(this);
+        mAuthProgressDialog.setTitle("Loading...");
+        mAuthProgressDialog.setMessage("Authenticating with Firebase...");
+        mAuthProgressDialog.setCancelable(false);
     }
 
     @Override
@@ -89,33 +99,49 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    private void createAuthStateListener () {
+        // This listens to changes in the current AuthState.
+        // Whenever there is a change (i.e a user is authenticated or signs out)
+        // this interfaces triggers the onAuthStateChanged() method.
+        // This method returns FirebaseAuth data
+        mAuthListener = firebaseAuth -> {
+            // Using this data we can create a FirebaseUser by calling the get
+            // current user method.
+            final FirebaseUser user = firebaseAuth.getCurrentUser();
+
+            // Check that the above is not null
+            if(user != null){
+
+                Intent intent = new Intent(CreateAccountActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+        };
+    }
+
     @Override
     public void onClick(View view){
-        if(view == mCreateUserButton){
-            createNewUser();
-            Toast.makeText(
-                    CreateAccountActivity.this,
-                    "About to create user",
-                    Toast.LENGTH_LONG
-            ).show();
-        }
         if(view == mLoginHere){
             Intent intent = new Intent(CreateAccountActivity.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
         }
+        if(view == mCreateUserButton){
+            createNewUser();
+        }
     }
 
 
     private void createNewUser(){
-        final String name = mNameEditText.getText().toString().trim();
+        mName = mNameEditText.getText().toString().trim();
         final String email = mEmailEditText.getText().toString().trim();
         String password = mPasswordEditText.getText().toString().trim();
         String confirmPassword = mConfirmPasswordEditText.getText().toString().trim();
 
-        boolean validName = isValidName(name);
         boolean validEmail = isValidEmail(email);
+        boolean validName = isValidName(mName);
         boolean validPassword = isValidPassword(password, confirmPassword);
         // Not exactly how below code would work.
         if(!validEmail || !validName || !validPassword) return;
@@ -166,36 +192,6 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
             });
     }
 
-    private void createAuthStateListener () {
-        // This listens to changes in the current AuthState.
-        // Whenever there is a change (i.e a user is authenticated or signs out)
-        // this interfaces triggers the onAuthStateChanged() method.
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            // This method returns FirebaseAuth data
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                // Using this data we can create a FirebaseUser by calling the get
-                // current user method.
-                final FirebaseUser user = firebaseAuth.getCurrentUser();
-
-                // Check that the above is not null
-                if(user != null){
-                    Intent intent = new Intent(CreateAccountActivity.this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
-                }
-            }
-        };
-    }
-
-
-    public void createAuthProgressDialog(){
-        mAuthProgressDialog = new ProgressDialog(this);
-        mAuthProgressDialog.setTitle("Loading...");
-        mAuthProgressDialog.setMessage("Authenticating with Firebase...");
-        mAuthProgressDialog.setCancelable(false);
-    }
 
 
     // VALIDATING USER EMAIL AND PASSWORD.
@@ -228,6 +224,4 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         }
         return true;
     }
-
-
 }
