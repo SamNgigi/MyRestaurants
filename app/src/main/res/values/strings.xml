@@ -32,5 +32,7 @@
     <string name="test_string">Hi there!</string>
     <string name="logout">Logout</string>
     <string name="bike_bruh">Bike bruh</string>
+    <string name="dummy_txt">Mmm mmm</string>
+    <string name="that_mahali">That mahali</string>
 
 </resources>

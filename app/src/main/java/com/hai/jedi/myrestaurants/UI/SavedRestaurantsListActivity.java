@@ -45,16 +45,17 @@ public class SavedRestaurantsListActivity extends AppCompatActivity {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = Objects.requireNonNull(user).getUid();
-
         mRestaurantReference = FirebaseDatabase
                                 .getInstance()
                                 .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
                                 .child(uid);
 
+
         setUpFirebaseAdapter();
     }
 
     private void setUpFirebaseAdapter(){
+
 
         FirebaseRecyclerOptions<Restaurant> options = new FirebaseRecyclerOptions
                 .Builder<Restaurant>()
@@ -72,7 +73,7 @@ public class SavedRestaurantsListActivity extends AppCompatActivity {
             @Override
             public FirebaseRestaurantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.restaurant_list_item, parent, false);
+                        .inflate(R.layout.restaurant_list_item_drag, parent, false);
                 return new FirebaseRestaurantViewHolder(view);
             }
         };

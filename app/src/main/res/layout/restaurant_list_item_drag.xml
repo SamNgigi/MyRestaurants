@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <RelativeLayout
@@ -22,8 +22,53 @@
             android:layout_centerVertical="true"
             android:layout_alignStart="@+id/restaurantImageView"
             android:foregroundGravity="bottom|left"
-            android:src="@drawable/ic_iconmonstr_sort_1"
-            />
+            android:src="@drawable/ic_iconmonstr_sort_3" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dummy_txt"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:id="@+id/restaurantNameTextView"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/that_mahali"
+            android:layout_below="@+id/restaurantNameTextView"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:id="@+id/tagTxtView"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rating"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"
+                android:id="@+id/ratingTxtView"/>
+        </RelativeLayout>
 
 
     </RelativeLayout>
