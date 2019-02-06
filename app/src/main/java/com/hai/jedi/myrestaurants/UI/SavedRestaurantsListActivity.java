@@ -1,6 +1,8 @@
 package com.hai.jedi.myrestaurants.UI;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hai.jedi.myrestaurants.Adapters.FirebaseRestaurantViewHolder;
 import com.hai.jedi.myrestaurants.Constants;
@@ -25,6 +27,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Objects;
+
 public class SavedRestaurantsListActivity extends AppCompatActivity {
     private DatabaseReference mRestaurantReference;
     private FirebaseRecyclerAdapter mFirebaseAdapter;
@@ -39,13 +43,18 @@ public class SavedRestaurantsListActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = Objects.requireNonNull(user).getUid();
+
+        mRestaurantReference = FirebaseDatabase
+                                .getInstance()
+                                .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
+                                .child(uid);
+
         setUpFirebaseAdapter();
     }
 
     private void setUpFirebaseAdapter(){
-
-        mRestaurantReference = FirebaseDatabase.getInstance()
-                .getReference(Constants.FIREBASE_CHILD_RESTAURANTS);
 
         FirebaseRecyclerOptions<Restaurant> options = new FirebaseRecyclerOptions
                 .Builder<Restaurant>()

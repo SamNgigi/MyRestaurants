@@ -199,7 +199,7 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         boolean validEmail = (email !=null &&
                 android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches());
         if(!validEmail){
-            mEmailEditText.setError("Please enter a valid email address");
+            mEmailEditText.setError("Please enter a valid email addresses");
             return false;
         }
         return validEmail;

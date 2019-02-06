@@ -18,13 +18,15 @@ public class Restaurant {
     String imageUrl;
     double latitude;
     double longitude;
-    List<String> address = new ArrayList<>();
+    List<String> addresses = new ArrayList<>();
     List<String> categories = new ArrayList<>();
+    // Firebase pushID
+    private String pushId;
 
     public Restaurant(){}
 
     public Restaurant(String name, String phone, String website, double rating,
-                      String imageUrl, double latitude, double longitude, ArrayList<String> address,
+                      String imageUrl, double latitude, double longitude, ArrayList<String> addresses,
                       ArrayList<String> categories){
         this.name = name;
         this.phone = phone;
@@ -33,7 +35,7 @@ public class Restaurant {
         this.imageUrl = imageUrl;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.address = address;
+        this.addresses = addresses;
         this.categories = categories;
     }
 
@@ -66,7 +68,7 @@ public class Restaurant {
     }
 
     public List<String> getAddresses(){
-        return address;
+        return addresses;
     }
 
     public List<String> getCategories(){
@@ -76,5 +78,14 @@ public class Restaurant {
     public String getLargeImageUrl(String imageUrl){
         String largeImageUrl = imageUrl.substring(0, imageUrl.length() - 6).concat("o.jpg");
         return largeImageUrl;
+    }
+
+    // For firebase pushId
+    public String getPushId(){
+        return pushId;
+    }
+
+    public void setPushId(String pushId){
+        this.pushId = pushId;
     }
 }

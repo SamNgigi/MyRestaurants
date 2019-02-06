@@ -18,11 +18,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import com.google.firebase.auth.FirebaseUser;
+
 import com.hai.jedi.myrestaurants.Constants;
 import com.hai.jedi.myrestaurants.R;
 import com.hai.jedi.myrestaurants.Models.Restaurant;
@@ -111,7 +115,7 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         addressLabel.setText(android.text.TextUtils.join(", ", mRestaurant.getAddresses()));
         // mUrlLabel.setText(mRestaurant.getName());
 
-        // We set OnClickListeners to website url phone and address
+        // We set OnClickListeners to website url phone and addresses
         mUrlLabel.setOnClickListener(this);
         phoneLabel.setOnClickListener(this);
         addressLabel.setOnClickListener(this);
@@ -140,10 +144,16 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
             startActivity(mapIntent);
         }
         if(view == mSaveRestaurantButton) {
+            // Getting the user's uid.
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            String uid = Objects.requireNonNull(user).getUid();
 
             DatabaseReference restaurantRef = FirebaseDatabase
                                              .getInstance()
-                                             .getReference(Constants.FIREBASE_CHILD_RESTAURANTS);
+                                             .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
+                                             .child(uid); // We use this method to create node within
+                                                          // the restaurant node to store the given user's
+                                                          // list of restaurants.
 
             restaurantRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -170,7 +180,10 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
                                 "Restaurant is already saved",
                                 Toast.LENGTH_LONG).show();
                     } else {
-                        restaurantRef.push().setValue(mRestaurant);
+                        DatabaseReference pushRef = restaurantRef.push();
+                        String pushId = pushRef.getKey();
+                        mRestaurant.setPushId(pushId); // setting pushId to restaurant object
+                        pushRef.setValue(mRestaurant);
                         Toast.makeText(getContext(), "Saved", Toast.LENGTH_LONG).show();
                     }
                 }
