@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -24,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener{
@@ -62,9 +65,14 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder
     public void onClick(View view){
         final ArrayList<Restaurant> restaurants = new ArrayList<>();
 
+        // We have to access the users uid inorder to retrieve details of their saved restaurants
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = Objects.requireNonNull(user).getUid();
+
         DatabaseReference ref = FirebaseDatabase
                 .getInstance()
-                .getReference(Constants.FIREBASE_CHILD_RESTAURANTS);
+                .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
+                .child(uid);
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

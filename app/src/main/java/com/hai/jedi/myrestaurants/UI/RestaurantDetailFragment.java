@@ -1,6 +1,7 @@
 package com.hai.jedi.myrestaurants.UI;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -63,6 +64,8 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
 
     private Restaurant mRestaurant;
 
+    private ProgressDialog mSavingProgressDialog;
+
     /**
      * This method below is used instead of a constructor and returns a new instance of our
      * RestaurantDetailFragment.
@@ -92,6 +95,15 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         // restaurant and store it to mRestaurant.
         assert getArguments() != null;
         mRestaurant = Parcels.unwrap(getArguments().getParcelable("restaurant"));
+
+        createSavingProgressDialog();
+    }
+
+    public void createSavingProgressDialog(){
+        mSavingProgressDialog = new ProgressDialog(getActivity());
+        mSavingProgressDialog.setTitle("Loading...");
+        mSavingProgressDialog.setMessage("Saving Restaurant to Firebase...");
+        mSavingProgressDialog.setCancelable(false);
     }
 
     // Here we set the various restaurant attributes to the ImageViews and TextViews
@@ -144,6 +156,7 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
             startActivity(mapIntent);
         }
         if(view == mSaveRestaurantButton) {
+            mSavingProgressDialog.show();
             // Getting the user's uid.
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             String uid = Objects.requireNonNull(user).getUid();
@@ -186,6 +199,7 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
                         pushRef.setValue(mRestaurant);
                         Toast.makeText(getContext(), "Saved", Toast.LENGTH_LONG).show();
                     }
+                    mSavingProgressDialog.dismiss();
                 }
 
 
