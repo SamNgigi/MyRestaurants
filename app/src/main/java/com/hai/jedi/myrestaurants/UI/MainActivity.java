@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         FirebaseUser user = firebaseAuth.getCurrentUser();
                         if (user != null ){
                             Objects.requireNonNull(getSupportActionBar()).setTitle(
-                                    String.format("Welcome, %s", user.getDisplayName())
+                                    String.format("Welcome, %s!", user.getDisplayName())
                             );
                         }
                     }
