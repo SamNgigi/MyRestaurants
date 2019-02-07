@@ -27,13 +27,15 @@ public class FirebaseRestaurantListAdapter
      *
      * @param options
      */
+
+
     public FirebaseRestaurantListAdapter(@NonNull FirebaseRecyclerOptions<Restaurant> options) {
         super(options);
     }
 
 
     @Override
-    protected void onBindViewHolder(@NonNull FirebaseRestaurantViewHolder viewHolder, int i, @NonNull Restaurant restaurant) {
+    protected void onBindViewHolder(@NonNull FirebaseRestaurantViewHolder frViewHolder, int position, @NonNull Restaurant restaurant) {
 
     }
 
