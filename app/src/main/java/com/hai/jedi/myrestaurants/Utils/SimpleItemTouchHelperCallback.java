@@ -26,6 +26,9 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         /*
         * This method informs the ItemTouchHelper that drag gestures are enabled. We could also
         * disable drag gestures by return false
+        *
+        * In order to use a specific handle view (ImageView)to drag and drop we need to set
+        * this to false
         * */
         return true;
     }
