@@ -206,6 +206,12 @@ public class FirebaseRestaurantListAdapter
         } else {
             for (int i = fromPosition; i > toPosition; i--) {
                 Collections.swap(mRestaurants, i, i - 1);
+                Restaurant restaurant_1 = mRestaurants.get(i);
+                restaurant_1.setIndex(Integer.toString(i));
+                reference1.setValue(restaurant_1);
+                Restaurant restaurant_2 = mRestaurants.get(i-1);
+                restaurant_2.setIndex(Integer.toString(i-1));
+                reference2.setValue(restaurant_2);
             }
         }
 
