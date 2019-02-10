@@ -40,6 +40,8 @@ public class SavedRestaurantsListActivity extends AppCompatActivity implements O
     private FirebaseRestaurantListAdapter mFirebaseAdapter;
     private ItemTouchHelper mItemTouchHelper;
 
+    private Query query;
+
     @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
 
     @Override
@@ -58,7 +60,13 @@ public class SavedRestaurantsListActivity extends AppCompatActivity implements O
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = Objects.requireNonNull(user).getUid();
 
-        Query query = FirebaseDatabase
+        mRestaurantReference = FirebaseDatabase
+                .getInstance()
+                .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
+                .child(uid);
+
+
+        query = FirebaseDatabase
                 .getInstance()
                 .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
                 .child(uid)
@@ -70,7 +78,7 @@ public class SavedRestaurantsListActivity extends AppCompatActivity implements O
                 .setQuery(query, Restaurant.class)
                 .build();
 
-        mFirebaseAdapter = new FirebaseRestaurantListAdapter(options, (OnStartDragListener) this, this);
+        mFirebaseAdapter = new FirebaseRestaurantListAdapter(options, mRestaurantReference, this, this);
 
         mRecyclerView.setAdapter(mFirebaseAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -100,7 +108,7 @@ public class SavedRestaurantsListActivity extends AppCompatActivity implements O
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        mFirebaseAdapter.stopListening();
+//        mFirebaseAdapter.cleanup();
     }
 
 }

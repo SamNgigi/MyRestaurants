@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -51,23 +52,25 @@ public class FirebaseRestaurantListAdapter
 
 
     public FirebaseRestaurantListAdapter(@NonNull FirebaseRecyclerOptions<Restaurant> options,
+                                         DatabaseReference reference,
                                          OnStartDragListener onStartDragListener,
                                          Context context) {
         super(options);
+        mRef = reference;
         mOnStartDragListener = onStartDragListener;
         mContext = context;
 
         mChildEventListener = mRef.addChildEventListener(new ChildEventListener(){
 
             /*
-            * Each time the adapter is constructed, the onChildAdded() will be triggered for each
-            * item in the given reference
-            * */
+             * Each time the adapter is constructed, the onChildAdded() will be triggered for each
+             * item in the given reference
+             * */
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String str){
                 /*
-                * We use the add() method to add each returned item to the mRestaurants ArrayList so
-                * that we can access the list of restaurants throughout our adapter.
+                 * We use the add() method to add each returned item to the mRestaurants ArrayList so
+                 * that we can access the list of restaurants throughout our adapter.
                  * */
                 mRestaurants.add(dataSnapshot.getValue(Restaurant.class));
             }
@@ -168,7 +171,7 @@ public class FirebaseRestaurantListAdapter
     @Override
     public FirebaseRestaurantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.restaurant_list_item_drag, parent, false);
+                .inflate(R.layout.restaurant_list_item_drag, parent, false);
         return new FirebaseRestaurantViewHolder(view);
     }
 
@@ -187,10 +190,25 @@ public class FirebaseRestaurantListAdapter
      */
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
-        // We swap the ArrayList position of the item we dragged and dropped.
-        Collections.swap(mRestaurants, fromPosition, toPosition);
-        // We call the notifyItemMoved method to notify our adapter that the underlying data has
-        // changed.
+        DatabaseReference reference1 = getRef(fromPosition);
+        DatabaseReference reference2 = getRef(toPosition);
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(mRestaurants, i, i + 1);
+                Restaurant restaurant_1 = mRestaurants.get(i);
+                restaurant_1.setIndex(Integer.toString(i));
+                reference1.setValue(restaurant_1);
+                Restaurant restaurant_2 = mRestaurants.get(i+1);
+                restaurant_2.setIndex(Integer.toString(i+1));
+                reference2.setValue(restaurant_2);
+
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(mRestaurants, i, i - 1);
+            }
+        }
+
         notifyItemMoved(fromPosition, toPosition);
         return false;
 
@@ -205,38 +223,24 @@ public class FirebaseRestaurantListAdapter
     @Override
     public void onItemDismiss(int position) {
         /*
-        * To delete the dismissed item from Firebase, we can call the getRef method
-        * passing in an item's position and the FirebaseRecyclerAdapter will return
-        * the DatabaseReference for the given object.
-        *
-        * We then call the removeValue method to delete that object from Firebase.
-        *
-        * Once deleted the FirebaseRecyclerAdapter will automatically update the view.
-        *
-        * Note the getRef() method is a firebase ui's FirebaseRecyclerAdapter method.
-        * */
+         * To delete the dismissed item from Firebase, we can call the getRef method
+         * passing in an item's position and the FirebaseRecyclerAdapter will return
+         * the DatabaseReference for the given object.
+         *
+         * We then call the removeValue method to delete that object from Firebase.
+         *
+         * Once deleted the FirebaseRecyclerAdapter will automatically update the view.
+         *
+         * Note the getRef() method is a firebase ui's FirebaseRecyclerAdapter method.
+         * */
         mRestaurants.remove(position);
         getRef(position).removeValue();
     }
 
-    private void setIndexInFirebase(){
-        for(Restaurant restaurant: mRestaurants){
-            // Grabbing the int index of each restaurant object in our mRestaurants ArrayList
-            int index = mRestaurants.indexOf(restaurant);
-            // We grab the DB reference of each item using the getRef method, parsing in positional
-            // index
-            DatabaseReference ref = getRef(index);
-            // We the set the String value of the index to the restaurant object
-            restaurant.setIndex(Integer.toString(index));
-            // we then set the DB reference value of our restaurant object
-            ref.setValue(restaurant);
-        }
-    }
 
     @Override
     public void stopListening(){
         super.stopListening();
-        setIndexInFirebase();
         mRef.removeEventListener(mChildEventListener);
     }
 
