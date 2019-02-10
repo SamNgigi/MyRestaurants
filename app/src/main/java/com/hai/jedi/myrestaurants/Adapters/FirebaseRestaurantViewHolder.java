@@ -28,8 +28,7 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder
-        implements View.OnClickListener{
+public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder{
     public static final int MAX_WIDTH = 200;
     public static final int MAXHEIGHT = 200;
 
@@ -43,7 +42,7 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder
         super(itemView);
         mView = itemView;
         mContext = itemView.getContext();
-        mView.setOnClickListener(this);
+        //mView.setOnClickListener(this);
     }
 
     public void bindRestaurant(Restaurant restaurant){
@@ -63,40 +62,5 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder
         ratingTextView.setText(String.format("Rating: %s/5", restaurant.getRating()));
     }
 
-    @Override
-    public void onClick(View view){
-        final ArrayList<Restaurant> restaurants = new ArrayList<>();
 
-        // We have to access the users uid inorder to retrieve details of their saved restaurants
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String uid = Objects.requireNonNull(user).getUid();
-
-        DatabaseReference ref = FirebaseDatabase
-                .getInstance()
-                .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
-                .child(uid);
-
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    restaurants.add(snapshot.getValue(Restaurant.class));
-                }
-                int itemPosition = getLayoutPosition();
-
-                Intent intent = new Intent(mContext, RestaurantDetailActivity.class);
-                intent.putExtra("position", itemPosition + "");
-                intent.putExtra("restaurants", Parcels.wrap(restaurants));
-
-                mContext.startActivity(intent);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Do something
-            }
-        });
-
-
-    }
 }

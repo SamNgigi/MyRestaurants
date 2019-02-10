@@ -2,6 +2,7 @@ package com.hai.jedi.myrestaurants.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -10,16 +11,26 @@ import android.view.View;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DatabaseError;
+
 import com.hai.jedi.myrestaurants.Models.Restaurant;
 import com.hai.jedi.myrestaurants.R;
+import com.hai.jedi.myrestaurants.UI.RestaurantDetailActivity;
 import com.hai.jedi.myrestaurants.Utils.ItemTouchHelperAdapter;
 import com.hai.jedi.myrestaurants.Utils.OnStartDragListener;
+
+import org.parceler.Parcels;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.view.MotionEventCompat;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class FirebaseRestaurantListAdapter
         extends FirebaseRecyclerAdapter<Restaurant, FirebaseRestaurantViewHolder>
@@ -28,6 +39,9 @@ public class FirebaseRestaurantListAdapter
     private DatabaseReference mRef;
     private OnStartDragListener mOnStartDragListener;
     private Context mContext;
+
+    private ChildEventListener mChildEventListener;
+    private ArrayList<Restaurant> mRestaurants = new ArrayList<>();
 
     /**
      * @param options - What i get by this, is that it will hold our Database reference of the
@@ -42,6 +56,44 @@ public class FirebaseRestaurantListAdapter
         super(options);
         mOnStartDragListener = onStartDragListener;
         mContext = context;
+
+        mChildEventListener = mRef.addChildEventListener(new ChildEventListener(){
+
+            /*
+            * Each time the adapter is constructed, the onChildAdded() will be triggered for each
+            * item in the given reference
+            * */
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String str){
+                /*
+                * We use the add() method to add each returned item to the mRestaurants ArrayList so
+                * that we can access the list of restaurants throughout our adapter.
+                 * */
+                mRestaurants.add(dataSnapshot.getValue(Restaurant.class));
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s){
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot){
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s){
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError){
+
+            }
+
+        });
+
     }
 
     /**
@@ -74,11 +126,25 @@ public class FirebaseRestaurantListAdapter
                         return false;
                     }
                 });
+
+        frViewHolder.itemView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                // Defining intent to go from mContext to RestaurantDetailActivity
+                Intent intent = new Intent(mContext, RestaurantDetailActivity.class);
+                // Getting the current position of the click item
+                intent.putExtra("position", frViewHolder.getAdapterPosition());
+                // Parsing the data within the specific restaurant.
+                intent.putExtra("restaurants", Parcels.wrap(mRestaurants));
+
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     /**
-     * Called when RecyclerView needs a new {@link ViewHolder} of the given type to represent
-     * an item.
+     * Called when RecyclerView needs a new {@link FirebaseRestaurantViewHolder} of the given type
+     * to represent an item.
      *
      * This new ViewHolder should be constructed with a new View that can represent the items
      * of the given type. You can either create a new View manually or inflate it from an XML
@@ -87,16 +153,16 @@ public class FirebaseRestaurantListAdapter
      * Here we provide the restaurant_list_item_drag layout xml file
      *
      * The new ViewHolder will be used to display items of the adapter using
-     * {@link #onBindViewHolder(ViewHolder, int, List)}. Since it will be re-used to display
-     * different items in the data set, it is a good idea to cache references to sub views of
-     * the View to avoid unnecessary {@link View#findViewById(int)} calls.
+     * {@link #onBindViewHolder(FirebaseRestaurantViewHolder, int, Restaurant)}. Since it will be
+     * re-used to display different items in the data set, it is a good idea to cache references to
+     * sub views of the View to avoid unnecessary {@link View#findViewById(int)} calls.
      *
      * @param parent   The ViewGroup into which the new View will be added after it is bound to
      *                 an adapter position.
      * @param viewType The view type of the new View.
      * @return A new ViewHolder that holds a View of the given view type.
      * @see #getItemViewType(int)
-     * @see #onBindViewHolder(ViewHolder, int)
+     * @see #onBindViewHolder(FirebaseRestaurantViewHolder, int, Restaurant)
      */
     @NonNull
     @Override
@@ -121,7 +187,9 @@ public class FirebaseRestaurantListAdapter
      */
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
-        // We call the notigyItemMoved method to notify our adapter that the underlying data has
+        // We swap the ArrayList position of the item we dragged and dropped.
+        Collections.swap(mRestaurants, fromPosition, toPosition);
+        // We call the notifyItemMoved method to notify our adapter that the underlying data has
         // changed.
         notifyItemMoved(fromPosition, toPosition);
         return false;
@@ -147,7 +215,29 @@ public class FirebaseRestaurantListAdapter
         *
         * Note the getRef() method is a firebase ui's FirebaseRecyclerAdapter method.
         * */
+        mRestaurants.remove(position);
         getRef(position).removeValue();
+    }
+
+    private void setIndexInFirebase(){
+        for(Restaurant restaurant: mRestaurants){
+            // Grabbing the int index of each restaurant object in our mRestaurants ArrayList
+            int index = mRestaurants.indexOf(restaurant);
+            // We grab the DB reference of each item using the getRef method, parsing in positional
+            // index
+            DatabaseReference ref = getRef(index);
+            // We the set the String value of the index to the restaurant object
+            restaurant.setIndex(Integer.toString(index));
+            // we then set the DB reference value of our restaurant object
+            ref.setValue(restaurant);
+        }
+    }
+
+    @Override
+    public void stopListening(){
+        super.stopListening();
+        setIndexInFirebase();
+        mRef.removeEventListener(mChildEventListener);
     }
 
 }
