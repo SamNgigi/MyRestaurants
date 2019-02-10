@@ -52,7 +52,7 @@ public class Restaurant {
         this.addresses = addresses;
         this.categories = categories;
         //
-        this.index = "0";
+        this.index = "not_specified";
     }
 
     public String getName(){
