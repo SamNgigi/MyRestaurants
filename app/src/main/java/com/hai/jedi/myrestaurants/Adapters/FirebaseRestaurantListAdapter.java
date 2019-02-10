@@ -2,6 +2,7 @@ package com.hai.jedi.myrestaurants.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -120,7 +121,11 @@ public class FirebaseRestaurantListAdapter
      */
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
+        // We call the notigyItemMoved method to notify our adapter that the underlying data has
+        // changed.
+        notifyItemMoved(fromPosition, toPosition);
         return false;
+
     }
 
     /**
@@ -131,6 +136,18 @@ public class FirebaseRestaurantListAdapter
      */
     @Override
     public void onItemDismiss(int position) {
-
+        /*
+        * To delete the dismissed item from Firebase, we can call the getRef method
+        * passing in an item's position and the FirebaseRecyclerAdapter will return
+        * the DatabaseReference for the given object.
+        *
+        * We then call the removeValue method to delete that object from Firebase.
+        *
+        * Once deleted the FirebaseRecyclerAdapter will automatically update the view.
+        *
+        * Note the getRef() method is a firebase ui's FirebaseRecyclerAdapter method.
+        * */
+        getRef(position).removeValue();
     }
+
 }

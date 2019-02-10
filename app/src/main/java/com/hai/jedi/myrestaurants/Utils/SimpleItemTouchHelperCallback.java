@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hai.jedi.myrestaurants.Adapters.FirebaseRestaurantViewHolder;
 import com.hai.jedi.myrestaurants.Utils.ItemTouchHelperAdapter;
 
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
@@ -44,22 +45,6 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     }
 
    @Override
-    public int getMovementFlags(@NonNull RecyclerView recyclerView,
-                                @NonNull RecyclerView.ViewHolder viewHolder){
-
-        /*
-        * This method informs the ItemTouchHelper which movement directions are supported.
-        * For example, when a user drags a list item, they press "Down" to begin the drag an lift
-        * their finger, "Up", to end the drag.
-        *
-        * */
-
-        final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-        final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-        return makeMovementFlags(dragFlags, swipeFlags);
-   }
-
-   @Override
     public boolean onMove(@NonNull RecyclerView recyclerView,
                           @NonNull  RecyclerView.ViewHolder source,
                           @NonNull RecyclerView.ViewHolder target){
@@ -87,4 +72,42 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
         itemTouchHelperAdapter.onItemDismiss(viewHolder.getAdapterPosition());
    }
+
+    @Override
+    public int getMovementFlags(@NonNull RecyclerView recyclerView,
+                                @NonNull RecyclerView.ViewHolder viewHolder){
+
+        /*
+         * This method informs the ItemTouchHelper which movement directions are supported.
+         * For example, when a user drags a list item, they press "Down" to begin the drag an lift
+         * their finger, "Up", to end the drag.
+         *
+         * */
+
+        final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+        final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+        return makeMovementFlags(dragFlags, swipeFlags);
+    }
+
+    @Override
+    public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState){
+        if(actionState != ItemTouchHelper.ACTION_STATE_IDLE){
+            if(viewHolder instanceof FirebaseRestaurantViewHolder){
+                FirebaseRestaurantViewHolder frViewHolder = (FirebaseRestaurantViewHolder) viewHolder;
+                itemTouchHelperAdapter.onItemSelected(frViewHolder);
+            }
+        }
+    }
+
+   @Override
+    public void clearView(@NonNull RecyclerView recyclerView,
+                          @NonNull RecyclerView.ViewHolder viewHolder){
+        super.clearView(recyclerView, viewHolder);
+
+        if(viewHolder instanceof FirebaseRestaurantViewHolder){
+            FirebaseRestaurantViewHolder frViewHolder = (FirebaseRestaurantViewHolder) viewHolder;
+            itemTouchHelperAdapter.clearView(frViewHolder);
+        }
+   }
+
 }

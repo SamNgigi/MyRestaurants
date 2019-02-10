@@ -1,5 +1,7 @@
 package com.hai.jedi.myrestaurants.Utils;
 
+import com.hai.jedi.myrestaurants.Adapters.FirebaseRestaurantViewHolder;
+
 public interface ItemTouchHelperAdapter {
 
     /**
@@ -17,6 +19,7 @@ public interface ItemTouchHelperAdapter {
      * Below method is called when an item has been dismissed with a swipe motion. The parameter
      * position represents the location the user moved the item to.
      * */
+
     void onItemDismiss(int position);
 
 }

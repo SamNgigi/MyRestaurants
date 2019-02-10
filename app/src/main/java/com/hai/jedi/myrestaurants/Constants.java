@@ -10,4 +10,7 @@ public class Constants {
     public static final String FIREBASE_CHILD_SEARCHED_LOCATION = "searchedLocation";
     // Firebase restaurants object child node reference. This will hold our json of restaurant objects
     public static final String FIREBASE_CHILD_RESTAURANTS = "restaurants";
+    // We add our new string to our Constants class so that we can reference the key of our
+    // Restaurant objects when we go to sort them in our Query
+    public static final String FIREBASE_QUERY_INDEX = "index";
 }

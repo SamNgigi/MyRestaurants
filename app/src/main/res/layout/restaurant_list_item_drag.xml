@@ -22,7 +22,7 @@
             android:layout_centerVertical="true"
             android:layout_alignStart="@+id/restaurantImageView"
             android:foregroundGravity="bottom|left"
-            android:src="@drawable/ic_iconmonstr_sort_3" />
+            android:src="@drawable/ic_view_comfy_black_24dp" />
 
     </RelativeLayout>
 
