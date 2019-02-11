@@ -15,6 +15,7 @@ import com.hai.jedi.myrestaurants.Constants;
 import com.hai.jedi.myrestaurants.R;
 import com.hai.jedi.myrestaurants.Models.Restaurant;
 import com.hai.jedi.myrestaurants.UI.RestaurantDetailActivity;
+import com.hai.jedi.myrestaurants.Utils.ItemTouchHelperViewHolderInterface;
 import com.squareup.picasso.Picasso;
 
 import androidx.annotation.NonNull;
@@ -28,9 +29,16 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder{
+import android.util.Log;
+
+public class FirebaseRestaurantViewHolder
+        extends RecyclerView.ViewHolder
+         implements ItemTouchHelperViewHolderInterface {
+
+    public final String TAG = FirebaseRestaurantViewHolder.class.getSimpleName();
+
     public static final int MAX_WIDTH = 200;
-    public static final int MAXHEIGHT = 200;
+    public static final int MAX_HEIGHT = 200;
 
     public ImageView restaurantImageView;
 
@@ -53,7 +61,7 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder{
 
         Picasso.get().load(restaurant
                 .getImageUrl())
-                .resize(MAX_WIDTH, MAXHEIGHT)
+                .resize(MAX_WIDTH, MAX_HEIGHT)
                 .centerCrop()
                 .into(restaurantImageView);
 
@@ -62,5 +70,15 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder{
         ratingTextView.setText(String.format("Rating: %s/5", restaurant.getRating()));
     }
 
+    @Override
+    public void onItemSelected(){
+        Log.d("Animation", "onItemSelected");
+        // We will add animations here
+    }
+
+    @Override
+    public void onItemClear(){
+        Log.d("Animation", "onItemClear");
+    }
 
 }
