@@ -1,5 +1,9 @@
 package com.hai.jedi.myrestaurants.Adapters;
 
+import com.hai.jedi.myrestaurants.R;
+
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -73,24 +77,26 @@ public class FirebaseRestaurantViewHolder
     @Override
     public void onItemSelected(){
         Log.d("ANIMATION", "onItemSelected");
-        // We will add animations here
-        itemView.animate()
-                .alpha(1f)
-                .scaleX(1.2f)
-                .scaleY(1.2f)
-                .setDuration(500);
+        // We will add animations here. Inflating our animations on our viewHolder
+        AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(
+                mContext,
+                R.animator.drag_scale_on);
+        set.setTarget(itemView);
+        set.start();
     }
 
     @Override
     public void onItemClear(){
 
         Log.d("ANIMATION", "onItemClear");
-
         // Ending the onItemSelected Animation
-        itemView.animate()
-                .alpha(1f)
-                .scaleX(1f)
-                .scaleY(1f);
+        AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(
+                mContext,
+                R.animator.drag_scale_off);
+
+        set.setTarget(itemView);
+        set.start();
+
     }
 
 }
