@@ -72,13 +72,13 @@ public class FirebaseRestaurantViewHolder
 
     @Override
     public void onItemSelected(){
-        Log.d("Animation", "onItemSelected");
+        Log.d("ANIMATION", "onItemSelected");
         // We will add animations here
     }
 
     @Override
     public void onItemClear(){
-        Log.d("Animation", "onItemClear");
+        Log.d("ANIMATION", "onItemClear");
     }
 
 }

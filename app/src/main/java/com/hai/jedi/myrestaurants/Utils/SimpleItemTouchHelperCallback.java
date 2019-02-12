@@ -89,5 +89,31 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         return makeMovementFlags(dragFlags, swipeFlags);
     }
 
+    @Override
+    public void onSelectedChanged(RecyclerView.ViewHolder viewHolder,
+                                  int actionState){
+        if(actionState != ItemTouchHelper.ACTION_STATE_IDLE){
+            if(viewHolder instanceof ItemTouchHelperViewHolderInterface){
+                ItemTouchHelperViewHolderInterface itemViewHolder =
+                        (ItemTouchHelperViewHolderInterface) viewHolder;
+                itemViewHolder.onItemSelected();
+            }
+        }
+        super.onSelectedChanged(viewHolder, actionState);
+    }
+
+    @Override
+    public void clearView(@NonNull RecyclerView recyclerView,
+                          @NonNull RecyclerView.ViewHolder viewHolder){
+        super.clearView(recyclerView, viewHolder);
+        if(viewHolder instanceof ItemTouchHelperViewHolderInterface){
+            ItemTouchHelperViewHolderInterface itemViewHolder =
+                    (ItemTouchHelperViewHolderInterface) viewHolder;
+
+            itemViewHolder.onItemClear();
+        }
+
+    }
+
 
 }
