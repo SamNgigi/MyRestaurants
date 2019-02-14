@@ -16,6 +16,7 @@ import com.hai.jedi.myrestaurants.Models.Restaurant;
 import com.hai.jedi.myrestaurants.UI.RestaurantDetailActivity;
 import com.hai.jedi.myrestaurants.R;
 import com.hai.jedi.myrestaurants.UI.RestaurantDetailFragment;
+import com.hai.jedi.myrestaurants.Utils.OnRestaurantSelectedInterface;
 import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
@@ -59,20 +60,28 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
     private ArrayList<Restaurant> mRestaurants = new ArrayList<>();
     // For our ViewHolder
     private Context mContent;
+    // Our Selected restaurant listener
+    private OnRestaurantSelectedInterface mOnRestaurantSelectedListener;
 
-    public RestaurantListAdapter(Context context, ArrayList<Restaurant> restaurants) {
+    public RestaurantListAdapter(Context context,
+                                 ArrayList<Restaurant> restaurants,
+                                 OnRestaurantSelectedInterface restaurantSelectedInterface) {
         mContent = context;
         mRestaurants = restaurants;
+        mOnRestaurantSelectedListener = restaurantSelectedInterface;
+
     }
 
     // Below method inflates an xml layout and returns a ViewHolder. I think it populates/inflates
     // each view it with data from the restaurant object
     @NonNull
     @Override
-    public RestaurantListAdapter.RestaurantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int ViewType){
+    public RestaurantListAdapter.RestaurantViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
+                                                                         int ViewType){
         View view = LayoutInflater.from(parent.getContext())
                                   .inflate(R.layout.restaurant_list_item, parent, false);
-        return new RestaurantViewHolder(view);
+        RestaurantViewHolder viewHolder = new RestaurantViewHolder(view, mRestaurants, mOnRestaurantSelectedListener);
+        return viewHolder;
     }
 
     @Override
@@ -99,14 +108,24 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 
         private int mOrientation;
 
+        // We added new Parameters to the the view holder  class so that we
+        // can access the position and the restaurant object
+        private ArrayList<Restaurant> mRestaurants;
+        private OnRestaurantSelectedInterface mRestaurantSelectedListener;
+
         // I would say connecting our different Views into a single ViewHolder
-        public RestaurantViewHolder(View itemView){
+        public RestaurantViewHolder(View itemView,
+                                    ArrayList<Restaurant> restaurants,
+                                    OnRestaurantSelectedInterface restaurantSelectedInterface){
             super(itemView);
             ButterKnife.bind(this, itemView);
             mContext = itemView.getContext();
 
             // Determining the current orientation of device
             mOrientation = itemView.getResources().getConfiguration().orientation;
+
+            mRestaurants = restaurants;
+            mRestaurantSelectedListener = restaurantSelectedInterface;
 
             /*
             * Checking if the recorded orientation matches Android's landscape
@@ -125,6 +144,9 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         public void onClick(View view){
             // Getting the specific item in the layout that has been clicked
             int itemPosition = getLayoutPosition();
+            // Now in the onclick we pass the exact position that was clicked and
+            // the Restaurant at that position
+            mRestaurantSelectedListener.onRestaurantSelected(itemPosition, mRestaurants);
 
             /*
             * Allowing user to change the detail container in landscape mode

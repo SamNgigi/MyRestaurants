@@ -1,6 +1,7 @@
 package com.hai.jedi.myrestaurants.UI;
 
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -20,6 +21,7 @@ import com.hai.jedi.myrestaurants.Constants;
 import com.hai.jedi.myrestaurants.Models.Restaurant;
 import com.hai.jedi.myrestaurants.R;
 import com.hai.jedi.myrestaurants.Services.YelpService;
+import com.hai.jedi.myrestaurants.Utils.OnRestaurantSelectedInterface;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,6 +51,8 @@ public class RestaurantListFragment extends Fragment {
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
     private String mRecentAdressess;
+
+    private OnRestaurantSelectedInterface mRestaurantSelectedListener;
 
 
     public RestaurantListFragment() {
@@ -117,6 +121,17 @@ public class RestaurantListFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        try{
+            mRestaurantSelectedListener =
+                    (OnRestaurantSelectedInterface) context;
+        }catch (ClassCastException exception){
+            throw new ClassCastException(context.toString() + exception.getMessage());
+        }
+    }
+
     public void getRestaurant(String location){
 
         final YelpService yelpService = new YelpService();
@@ -148,7 +163,9 @@ public class RestaurantListFragment extends Fragment {
                         * from parent
                         * */
                         mAdapter = new RestaurantListAdapter(
-                                getActivity(),mRestaurants);
+                                getActivity(),
+                                mRestaurants,
+                                mRestaurantSelectedListener);
                         mRecyclerView.setAdapter(mAdapter);
                         // We continue with parsing our getActivity()
                         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(

@@ -16,6 +16,7 @@ import android.content.Intent;
 
 // We have to import this now because everything is now  modularized and not in the
 // default locations
+import com.hai.jedi.myrestaurants.Constants;
 import com.hai.jedi.myrestaurants.R;
 import com.hai.jedi.myrestaurants.Models.Restaurant;
 import com.hai.jedi.myrestaurants.Adapters.RestaurantPagerAdapter;
@@ -51,8 +52,8 @@ public class RestaurantDetailActivity
         setContentView(R.layout.activity_restaurant_detail);
         ButterKnife.bind(this);
 
-        mRestaurants = Parcels.unwrap(getIntent().getParcelableExtra("restaurants"));
-        int starting_position = getIntent().getIntExtra("position", 0);
+        mRestaurants = Parcels.unwrap(getIntent().getParcelableExtra(Constants.EXTRA_KEY_RESTAURANTS));
+        int starting_position = getIntent().getIntExtra(Constants.EXTRA_KEY_POSITION, 0);
 
         /*
         * We instantiate an new pager adapter providing  our restaurant array as Arguments*/
