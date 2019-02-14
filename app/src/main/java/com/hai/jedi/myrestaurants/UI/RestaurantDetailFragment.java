@@ -63,6 +63,9 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
     @BindView(R.id.saveRestaurantButton) TextView mSaveRestaurantButton;
 
     private Restaurant mRestaurant;
+    private ArrayList<Restaurant> mRestaurants;
+    private int mPosition;
+
 
     private ProgressDialog mSavingProgressDialog;
 
@@ -72,14 +75,17 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
      *
      * We use the Parceler library add our restaurant object to our bundle and set the bundle as the
      * argument for our new RestaurantDetailFragment*/
-    public static RestaurantDetailFragment newInstance(Restaurant restaurant) {
+    public static RestaurantDetailFragment newInstance(ArrayList<Restaurant> restaurants,
+                                                       int position) {
         // Required empty public constructor. Instance of our Restaurant Fragment
         RestaurantDetailFragment restaurant_detail_fragment = new RestaurantDetailFragment();
         // I think what we will use to store and transfer  our serialized data to Fragment
         Bundle arguments = new Bundle();
-        // Serializing our restaurant object using Parcels.wrap then "attaching it" to pir arguments,
+        // Serializing our restaurants object using Parcels.wrap then "attaching it" to their arguments,
         // in a hash-map  way/ dictionary using key value pairs.
-        arguments.putParcelable("restaurant", Parcels.wrap(restaurant));
+        arguments.putParcelable(Constants.EXTRA_KEY_RESTAURANTS, Parcels.wrap(restaurants));
+        // We also add the int position of the restaurants as arguments.
+        arguments.putInt(Constants.EXTRA_KEY_POSITION, position);
         // Passing the serialized data to our fragment.
         restaurant_detail_fragment.setArguments(arguments);
         // returning the restaurant_fragment
@@ -94,7 +100,10 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         // When our fragment instances is created/initialized we want to deserialize the serialized
         // restaurant and store it to mRestaurant.
         assert getArguments() != null;
-        mRestaurant = Parcels.unwrap(getArguments().getParcelable("restaurant"));
+        mRestaurants = Parcels.unwrap(getArguments().getParcelable(
+                      Constants.EXTRA_KEY_RESTAURANTS));
+        mPosition = getArguments().getInt(Constants.EXTRA_KEY_POSITION);
+        mRestaurant = mRestaurants.get(mPosition);
 
         createSavingProgressDialog();
     }

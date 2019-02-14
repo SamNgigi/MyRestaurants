@@ -3,6 +3,7 @@ package com.hai.jedi.myrestaurants.Adapters;
 import android.content.Context;
 import android.content.Intent;
 
+import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hai.jedi.myrestaurants.Constants;
 import com.hai.jedi.myrestaurants.Models.Restaurant;
 import com.hai.jedi.myrestaurants.UI.RestaurantDetailActivity;
 import com.hai.jedi.myrestaurants.R;
+import com.hai.jedi.myrestaurants.UI.RestaurantDetailFragment;
 import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
@@ -20,6 +23,8 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import butterknife.BindView;
@@ -91,11 +96,27 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         @BindView(R.id.ratingTxtView) TextView mRatingTextView;
 
         private Context mContext;
+
+        private int mOrientation;
+
         // I would say connecting our different Views into a single ViewHolder
         public RestaurantViewHolder(View itemView){
             super(itemView);
             ButterKnife.bind(this, itemView);
             mContext = itemView.getContext();
+
+            // Determining the current orientation of device
+            mOrientation = itemView.getResources().getConfiguration().orientation;
+
+            /*
+            * Checking if the recorded orientation matches Android's landscape
+            * configuration. If so we create a new DetailFragment to display our
+            * special landscape layout.
+            * */
+            if(mOrientation == Configuration.ORIENTATION_LANDSCAPE){
+                createDetailFragment(0);
+            }
+
             // We set our listener to our RestaurantView Holder constructor
             itemView.setOnClickListener(this);
         }
@@ -104,13 +125,24 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         public void onClick(View view){
             // Getting the specific item in the layout that has been clicked
             int itemPosition = getLayoutPosition();
-            // Intent to navigate to our RestaurantDetailActivity
-            Intent intent = new Intent(mContext, RestaurantDetailActivity.class);
-            // Pass the item position and restaurant as data to be passes to RestaurantDetailActivity
-            intent.putExtra("position", itemPosition);
-            intent.putExtra("restaurants", Parcels.wrap(mRestaurants));
-            // Start/launch RestaurantDetailActivity
-            mContext.startActivity(intent);
+
+            /*
+            * Allowing user to change the detail container in landscape mode
+            * depending on which restaurant item they click
+            * */
+            if(mOrientation == Configuration.ORIENTATION_LANDSCAPE){
+                createDetailFragment(itemPosition);
+            } else {
+                /*NORMAL PORTRAIT MODE*/
+                // Intent to navigate to our RestaurantDetailActivity
+                Intent intent = new Intent(mContext, RestaurantDetailActivity.class);
+                // Pass the item position and restaurant as data to be passes to RestaurantDetailActivity
+                intent.putExtra(Constants.EXTRA_KEY_POSITION, itemPosition);
+                intent.putExtra(Constants.EXTRA_KEY_RESTAURANTS, Parcels.wrap(mRestaurants));
+                // Start/launch RestaurantDetailActivity
+                mContext.startActivity(intent);
+            }
+
         }
 
         // We define the method below that will set the contents of the layouts TextView to the
@@ -122,6 +154,28 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
             mTagTextView.setText(restaurant.getCategories().get(0));
             // mTagTextView.setText(android.text.TextUtils.join(", ", restaurant.getCategories()));
             mRatingTextView.setText(String.format("Rating: %s/5", restaurant.getRating()));
+        }
+
+        // Method takes in int position of restaurant in list as parameter
+        private void createDetailFragment(int position) {
+            // We create a new RestaurantDetailFragment with the given position
+            RestaurantDetailFragment detailFragment = RestaurantDetailFragment
+                                                    .newInstance(mRestaurants, position);
+            /*
+            * Gathering necessary components to replace the FrameLayout in the layout
+            * with the RestaurantDetailFragment
+            *
+            * The getSupportManager method is part of Android's build in interface of the
+            * FragmentManager which is responsible for interacting with Fragment objects
+            * */
+            FragmentTransaction fragmentTransaction = ((FragmentActivity) mContext)
+                                    .getSupportFragmentManager()
+                                    .beginTransaction();
+
+            // Replacing the FrameLayout with the RestaurantDetailFragment
+            fragmentTransaction.replace(R.id.restaurantDetailContainer, detailFragment);
+            // Committing the changes
+            fragmentTransaction.commit();
         }
 
 

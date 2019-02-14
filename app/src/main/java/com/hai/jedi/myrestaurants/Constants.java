@@ -13,4 +13,8 @@ public class Constants {
     // We add our new string to our Constants class so that we can reference the key of our
     // Restaurant objects when we go to sort them in our Query
     public static final String FIREBASE_QUERY_INDEX = "index";
+
+    // Passing in the Array position of a restaurant
+    public static final String EXTRA_KEY_POSITION = "position";
+    public static final String EXTRA_KEY_RESTAURANTS = "restaurants";
 }

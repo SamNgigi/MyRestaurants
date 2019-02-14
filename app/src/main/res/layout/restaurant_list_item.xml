@@ -25,7 +25,8 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
-            android:id="@+id/restaurantNameTextView"/>
+            android:id="@+id/restaurantNameTextView"
+            android:padding="5dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -35,7 +36,8 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:textStyle="italic"
-            android:id="@+id/tagTxtView"/>
+            android:id="@+id/tagTxtView"
+            android:padding="5dp"/>
 
 
         <RelativeLayout
@@ -49,7 +51,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:textColor="@color/colorAccent"
-                android:id="@+id/ratingTxtView"/>
+                android:id="@+id/ratingTxtView"
+                android:padding="5dp"/>
         </RelativeLayout>
 
     </RelativeLayout>
