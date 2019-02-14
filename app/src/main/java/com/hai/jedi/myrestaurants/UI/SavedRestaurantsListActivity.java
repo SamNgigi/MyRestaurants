@@ -35,12 +35,11 @@ import android.view.ViewGroup;
 
 import java.util.Objects;
 
-public class SavedRestaurantsListActivity extends AppCompatActivity implements OnStartDragListener{
+public class SavedRestaurantsListActivity extends AppCompatActivity{
     private DatabaseReference mRestaurantReference;
     private FirebaseRestaurantListAdapter mFirebaseAdapter;
     private ItemTouchHelper mItemTouchHelper;
 
-    private Query query;
 
     @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
 
@@ -50,65 +49,5 @@ public class SavedRestaurantsListActivity extends AppCompatActivity implements O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurants);
 
-        ButterKnife.bind(this);
-
-        setUpFirebaseAdapter();
     }
-
-    private void setUpFirebaseAdapter(){
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String uid = Objects.requireNonNull(user).getUid();
-
-        mRestaurantReference = FirebaseDatabase
-                .getInstance()
-                .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
-                .child(uid);
-
-
-        query = FirebaseDatabase
-                .getInstance()
-                .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
-                .child(uid)
-                .orderByChild(Constants.FIREBASE_QUERY_INDEX);
-
-
-        FirebaseRecyclerOptions<Restaurant> options = new FirebaseRecyclerOptions
-                .Builder<Restaurant>()
-                .setQuery(query, Restaurant.class)
-                .build();
-
-        mFirebaseAdapter = new FirebaseRestaurantListAdapter(options, mRestaurantReference, this, this);
-
-        mRecyclerView.setAdapter(mFirebaseAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setHasFixedSize(true);
-
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mFirebaseAdapter);
-        mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
-    }
-
-    @Override
-    protected void onStart(){
-        super.onStart();
-        mFirebaseAdapter.startListening();
-    }
-
-    @Override
-    protected void onStop(){
-        super.onStop();
-        mFirebaseAdapter.stopListening();
-    }
-
-    public void onStartDrag(RecyclerView.ViewHolder viewHolder){
-        mItemTouchHelper.startDrag(viewHolder);
-    }
-
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
-//        mFirebaseAdapter.cleanup();
-    }
-
 }
