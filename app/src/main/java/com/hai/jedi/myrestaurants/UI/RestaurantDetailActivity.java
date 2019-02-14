@@ -60,14 +60,17 @@ public class RestaurantDetailActivity
         restaurantAdapterViewPager = new RestaurantPagerAdapter(getSupportFragmentManager(),
                 mRestaurants);
 
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
 
         mViewPager.setAdapter(restaurantAdapterViewPager);
         mViewPager.setCurrentItem(starting_position);
+
+        // This code is for navigating from Detail Fragment to SavedRestaurantList Fragment by shaking
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mSensorManager.registerListener(this, mSensor, mSensorManager.SENSOR_DELAY_NORMAL);
     }
-
+// Implementing the shake
     @Override
     public void onSensorChanged(SensorEvent event){
         Sensor sensor = event.sensor;
