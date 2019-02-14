@@ -11,6 +11,9 @@
     <string name="restaurant_name">Restaurant Name</string>
     <string name="tags">Tags</string>
     <string name="rating">Rating</string>
+    <string name="view">View on Yelp</string>
+    <string name="phone">(503) 223–1282</string>
+    <string name="address">123 SW Best Ever Ave. Portland, Oregon, 97222</string>
 
     <string name="img_description">Mine</string>
 
@@ -34,5 +37,7 @@
     <string name="bike_bruh">Bike bruh</string>
     <string name="dummy_txt">Mmm mmm</string>
     <string name="that_mahali">That mahali</string>
+    <string name="drag_it">drag_it</string>
+    <string name="save">Save Restaurant</string>
 
 </resources>

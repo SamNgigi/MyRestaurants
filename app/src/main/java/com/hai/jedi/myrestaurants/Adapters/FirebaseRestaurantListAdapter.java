@@ -3,6 +3,7 @@ package com.hai.jedi.myrestaurants.Adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,9 +19,11 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DatabaseError;
 
+import com.hai.jedi.myrestaurants.Constants;
 import com.hai.jedi.myrestaurants.Models.Restaurant;
 import com.hai.jedi.myrestaurants.R;
 import com.hai.jedi.myrestaurants.UI.RestaurantDetailActivity;
+import com.hai.jedi.myrestaurants.UI.RestaurantDetailFragment;
 import com.hai.jedi.myrestaurants.Utils.ItemTouchHelperAdapter;
 import com.hai.jedi.myrestaurants.Utils.OnStartDragListener;
 
@@ -29,6 +32,8 @@ import org.parceler.Parcels;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.view.MotionEventCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,6 +48,11 @@ public class FirebaseRestaurantListAdapter
 
     private ChildEventListener mChildEventListener;
     private ArrayList<Restaurant> mRestaurants = new ArrayList<>();
+    /*
+    * Its seems we add our flexible ui logic where we interact with the List
+    * of data.
+    * */
+    private int mOrientation;
 
     /**
      * @param options - What i get by this, is that it will hold our Database reference of the
@@ -109,6 +119,14 @@ public class FirebaseRestaurantListAdapter
                                     int position, @NonNull Restaurant restaurant) {
 
         frViewHolder.bindRestaurant(restaurant);
+
+        mOrientation = frViewHolder.itemView.getResources()
+                        .getConfiguration().orientation;
+
+        if(mOrientation == Configuration.ORIENTATION_LANDSCAPE){
+            createDetailFragment(0);
+        }
+
         frViewHolder.restaurantImageView.setOnTouchListener(
                 new View.OnTouchListener(){
 
@@ -133,16 +151,43 @@ public class FirebaseRestaurantListAdapter
         frViewHolder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                // Defining intent to go from mContext to RestaurantDetailActivity
-                Intent intent = new Intent(mContext, RestaurantDetailActivity.class);
-                // Getting the current position of the click item
-                intent.putExtra("position", frViewHolder.getAdapterPosition());
-                // Parsing the data within the specific restaurant.
-                intent.putExtra("restaurants", Parcels.wrap(mRestaurants));
+                int itemPosition = frViewHolder.getAdapterPosition();
+                if(mOrientation == Configuration.ORIENTATION_LANDSCAPE){
+                    createDetailFragment(itemPosition);
+                } else {
+                    // Defining intent to go from mContext to RestaurantDetailActivity
+                    Intent intent = new Intent(mContext, RestaurantDetailActivity.class);
+                    // Getting the current position of the click item
+                    intent.putExtra(Constants.EXTRA_KEY_POSITION, itemPosition);
+                    // Parsing the data within the specific restaurant.
+                    intent.putExtra(Constants.EXTRA_KEY_RESTAURANTS, Parcels.wrap(mRestaurants));
 
-                mContext.startActivity(intent);
+                    mContext.startActivity(intent);
+                }
             }
         });
+    }
+
+
+    private void createDetailFragment(int position) {
+        /*
+        * Creating a new RestaurantDetailFragment by calling the newInstance
+        * method
+        * */
+        RestaurantDetailFragment detailFragment = RestaurantDetailFragment
+                .newInstance(mRestaurants, position);
+
+        /*
+        * Necessary setup to replace FrameLayout in layout with our detail
+        * fragment
+         * */
+        FragmentTransaction fragmentTransaction = ((FragmentActivity) mContext)
+                .getSupportFragmentManager().beginTransaction();
+
+        // Replacing the FrameLayout
+        fragmentTransaction.replace(R.id.restaurantDetailContainer, detailFragment);
+        // Commit changes
+        fragmentTransaction.commit();
     }
 
     /**
