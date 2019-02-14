@@ -47,7 +47,7 @@ public class SavedRestaurantsListActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_restaurants);
+        setContentView(R.layout.activity_saved_restaurants_list);
 
     }
 }

@@ -3,6 +3,7 @@ package com.hai.jedi.myrestaurants.UI;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +29,8 @@ import com.hai.jedi.myrestaurants.Utils.OnStartDragListener;
 import com.hai.jedi.myrestaurants.Models.Restaurant;
 import com.hai.jedi.myrestaurants.Utils.SimpleItemTouchHelperCallback;
 
+import java.util.Objects;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -35,10 +38,13 @@ public class SavedRestaurantListFragment
         extends Fragment
         implements OnStartDragListener {
 
-    @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
-
+    private DatabaseReference mRestaurantReference;
     private FirebaseRestaurantListAdapter mFirebaseAdapter;
     private ItemTouchHelper mItemTouchHelper;
+
+    private Query query;
+
+    @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
 
 
     public SavedRestaurantListFragment() {
@@ -47,31 +53,30 @@ public class SavedRestaurantListFragment
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_saved_restaurant_list,
                                      container, false);
         ButterKnife.bind(this, view);
-
-
+        setUpFirebaseAdapter();
         return view;
     }
 
     private void setUpFirebaseAdapter(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String uid = user.getUid();
+        String uid = Objects.requireNonNull(user).getUid();
 
-        DatabaseReference mRestaurantReference =  FirebaseDatabase
-                                                    .getInstance()
-                                                    .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
-                                                    .child(uid);
+        mRestaurantReference =  FirebaseDatabase
+                                .getInstance()
+                                .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
+                                .child(uid);
 
 
-        Query query = FirebaseDatabase.getInstance()
-                                      .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
-                                      .child(uid)
-                                      .orderByChild(Constants.FIREBASE_QUERY_INDEX);
+        query = FirebaseDatabase.getInstance()
+                                  .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
+                                  .child(uid)
+                                  .orderByChild(Constants.FIREBASE_QUERY_INDEX);
 
         FirebaseRecyclerOptions<Restaurant> options = new FirebaseRecyclerOptions
                                                         .Builder<Restaurant>()
@@ -84,14 +89,34 @@ public class SavedRestaurantListFragment
         mFirebaseAdapter = new FirebaseRestaurantListAdapter(options, mRestaurantReference,
                                                              this, getActivity());
 
+
+        mRecyclerView.setAdapter(mFirebaseAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setHasFixedSize(true);
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setAdapter(mFirebaseAdapter);
+        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver(){
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                mFirebaseAdapter.notifyDataSetChanged();
+            }
+        });
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mFirebaseAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(mRecyclerView);
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        mFirebaseAdapter.startListening();
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        mFirebaseAdapter.stopListening();
     }
 
     @Override
@@ -102,7 +127,7 @@ public class SavedRestaurantListFragment
     @Override
     public void onDestroy(){
         super.onDestroy();
-        mFirebaseAdapter.stopListening();
+        // mFirebaseAdapter.stopListening();
     }
 
 }
