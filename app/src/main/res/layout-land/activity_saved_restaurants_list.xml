@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/fragmentItemList"
-        android:name="com.hai.jedi.myrestaurants.UI.RestaurantListFragment"
+        android:name="com.hai.jedi.myrestaurants.UI.SavedRestaurantListFragment"
         android:layout_weight="3"
         android:layout_width="0dp"
         android:layout_height="match_parent"/>

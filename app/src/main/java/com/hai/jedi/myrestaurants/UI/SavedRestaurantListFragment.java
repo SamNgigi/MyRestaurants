@@ -1,6 +1,7 @@
 package com.hai.jedi.myrestaurants.UI;
 
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,7 @@ import com.google.firebase.database.Query;
 import com.hai.jedi.myrestaurants.Adapters.FirebaseRestaurantListAdapter;
 import com.hai.jedi.myrestaurants.Constants;
 import com.hai.jedi.myrestaurants.R;
+import com.hai.jedi.myrestaurants.Utils.OnRestaurantSelectedInterface;
 import com.hai.jedi.myrestaurants.Utils.OnStartDragListener;
 import com.hai.jedi.myrestaurants.Models.Restaurant;
 import com.hai.jedi.myrestaurants.Utils.SimpleItemTouchHelperCallback;
@@ -43,6 +45,8 @@ public class SavedRestaurantListFragment
     private ItemTouchHelper mItemTouchHelper;
 
     private Query query;
+
+    private OnRestaurantSelectedInterface mOnRestaurantSelectedListener;
 
     @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
 
@@ -86,8 +90,10 @@ public class SavedRestaurantListFragment
         * We change the context from this to getActivity() because fragment do not have their own
         * context
         * */
-        mFirebaseAdapter = new FirebaseRestaurantListAdapter(options, mRestaurantReference,
-                                                             this, getActivity());
+        mFirebaseAdapter = new FirebaseRestaurantListAdapter(options,
+                mRestaurantReference,
+                this,
+                getActivity());
 
 
         mRecyclerView.setAdapter(mFirebaseAdapter);

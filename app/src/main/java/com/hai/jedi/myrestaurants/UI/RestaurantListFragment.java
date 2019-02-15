@@ -77,6 +77,17 @@ public class RestaurantListFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        try{
+            mRestaurantSelectedListener =
+                    (OnRestaurantSelectedInterface) context;
+        }catch (ClassCastException exception){
+            throw new ClassCastException(context.toString() + exception.getMessage());
+        }
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -119,17 +130,6 @@ public class RestaurantListFragment extends Fragment {
                 return false;
             }
         });
-    }
-
-    @Override
-    public void onAttach(Context context){
-        super.onAttach(context);
-        try{
-            mRestaurantSelectedListener =
-                    (OnRestaurantSelectedInterface) context;
-        }catch (ClassCastException exception){
-            throw new ClassCastException(context.toString() + exception.getMessage());
-        }
     }
 
     public void getRestaurant(String location){
