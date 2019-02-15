@@ -65,6 +65,7 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
     private Restaurant mRestaurant;
     private ArrayList<Restaurant> mRestaurants;
     private int mPosition;
+    private String mSource;
 
 
     private ProgressDialog mSavingProgressDialog;
@@ -76,7 +77,8 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
      * We use the Parceler library add our restaurant object to our bundle and set the bundle as the
      * argument for our new RestaurantDetailFragment*/
     public static RestaurantDetailFragment newInstance(ArrayList<Restaurant> restaurants,
-                                                       int position) {
+                                                       int position,
+                                                       String source) {
         // Required empty public constructor. Instance of our Restaurant Fragment
         RestaurantDetailFragment restaurant_detail_fragment = new RestaurantDetailFragment();
         // I think what we will use to store and transfer  our serialized data to Fragment
@@ -86,6 +88,7 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         arguments.putParcelable(Constants.EXTRA_KEY_RESTAURANTS, Parcels.wrap(restaurants));
         // We also add the int position of the restaurants as arguments.
         arguments.putInt(Constants.EXTRA_KEY_POSITION, position);
+        arguments.putString(Constants.KEY_SOURCE, source);
         // Passing the serialized data to our fragment.
         restaurant_detail_fragment.setArguments(arguments);
         // returning the restaurant_fragment
@@ -104,7 +107,8 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
                       Constants.EXTRA_KEY_RESTAURANTS));
         mPosition = getArguments().getInt(Constants.EXTRA_KEY_POSITION);
         mRestaurant = mRestaurants.get(mPosition);
-
+        mSource = getArguments().getString(Constants.KEY_SOURCE);
+        setHasOptionsMenu(true);
         createSavingProgressDialog();
     }
 
@@ -124,6 +128,13 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         ButterKnife.bind(this, view);
         // Attaching the various Restaurant object properties to the layout/view
         // Loading images with picasso with predefined size and some style edit.
+
+        if(mSource.equals(Constants.SOURCE_SAVED)){
+            mSaveRestaurantButton.setVisibility(View.GONE);
+        }else {
+            mSaveRestaurantButton.setOnClickListener(this);
+        }
+
         Picasso.get().load(mRestaurant.getImageUrl())
                      .resize(MAX_WIDTH, MAX_HEIGHT)
                      .centerCrop()
@@ -140,8 +151,7 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         mUrlLabel.setOnClickListener(this);
         phoneLabel.setOnClickListener(this);
         addressLabel.setOnClickListener(this);
-        mSaveRestaurantButton.setOnClickListener(this);
-        // We haven't the website url yet.
+
         return view;
     }
 

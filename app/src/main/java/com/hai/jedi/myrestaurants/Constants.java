@@ -17,4 +17,9 @@ public class Constants {
     // Passing in the Array position of a restaurant
     public static final String EXTRA_KEY_POSITION = "position";
     public static final String EXTRA_KEY_RESTAURANTS = "restaurants";
+
+    // These constants will help us distinguish which fragment we are in
+    public static final String KEY_SOURCE = "source";
+    public static final String SOURCE_SAVED = "saved";
+    public static final String SOURCE_FIND = "find";
 }

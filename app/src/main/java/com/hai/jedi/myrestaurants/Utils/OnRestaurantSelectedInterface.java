@@ -5,7 +5,12 @@ import com.hai.jedi.myrestaurants.Models.Restaurant;
 import java.util.ArrayList;
 
 public interface OnRestaurantSelectedInterface {
-
-    public void onRestaurantSelected(Integer position, ArrayList<Restaurant> restaurants);
+    /*
+    * We add source param to the method. This will allows to know the activity the user
+    * views our reusable fragment either RestaurantListActivity or SavedRestaurantList
+    * */
+    public void onRestaurantSelected(Integer position,
+                                     ArrayList<Restaurant> restaurants,
+                                     String source);
 
 }

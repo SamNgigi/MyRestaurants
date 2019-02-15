@@ -146,7 +146,10 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
             int itemPosition = getLayoutPosition();
             // Now in the onclick we pass the exact position that was clicked and
             // the Restaurant at that position
-            mRestaurantSelectedListener.onRestaurantSelected(itemPosition, mRestaurants);
+            mRestaurantSelectedListener.onRestaurantSelected(
+                    itemPosition,
+                    mRestaurants,
+                    Constants.KEY_SOURCE);
 
             /*
             * Allowing user to change the detail container in landscape mode
@@ -161,6 +164,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
                 // Pass the item position and restaurant as data to be passes to RestaurantDetailActivity
                 intent.putExtra(Constants.EXTRA_KEY_POSITION, itemPosition);
                 intent.putExtra(Constants.EXTRA_KEY_RESTAURANTS, Parcels.wrap(mRestaurants));
+                intent.putExtra(Constants.KEY_SOURCE, Constants.SOURCE_FIND);
                 // Start/launch RestaurantDetailActivity
                 mContext.startActivity(intent);
             }
@@ -182,7 +186,9 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         private void createDetailFragment(int position) {
             // We create a new RestaurantDetailFragment with the given position
             RestaurantDetailFragment detailFragment = RestaurantDetailFragment
-                                                    .newInstance(mRestaurants, position);
+                                                    .newInstance(mRestaurants,
+                                                                position,
+                                                                Constants.SOURCE_FIND);
             /*
             * Gathering necessary components to replace the FrameLayout in the layout
             * with the RestaurantDetailFragment

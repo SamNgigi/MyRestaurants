@@ -46,6 +46,8 @@ public class RestaurantDetailActivity
     private float last_x, last_y, last_z;
     private static final int SHAKE_THRESHOLD = 500;
 
+    private String mSource;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,10 +57,13 @@ public class RestaurantDetailActivity
         mRestaurants = Parcels.unwrap(getIntent().getParcelableExtra(Constants.EXTRA_KEY_RESTAURANTS));
         int starting_position = getIntent().getIntExtra(Constants.EXTRA_KEY_POSITION, 0);
 
+        // Todo- Here the content writes intent the second time instead of getIntent()
+        mSource = getIntent().getStringExtra(Constants.KEY_SOURCE);
+
         /*
         * We instantiate an new pager adapter providing  our restaurant array as Arguments*/
         restaurantAdapterViewPager = new RestaurantPagerAdapter(getSupportFragmentManager(),
-                mRestaurants);
+                mRestaurants, mSource);
 
 
 

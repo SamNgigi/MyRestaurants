@@ -161,7 +161,7 @@ public class FirebaseRestaurantListAdapter
                     intent.putExtra(Constants.EXTRA_KEY_POSITION, itemPosition);
                     // Parsing the data within the specific restaurant.
                     intent.putExtra(Constants.EXTRA_KEY_RESTAURANTS, Parcels.wrap(mRestaurants));
-
+                    intent.putExtra(Constants.KEY_SOURCE, Constants.SOURCE_SAVED);
                     mContext.startActivity(intent);
                 }
             }
@@ -175,7 +175,7 @@ public class FirebaseRestaurantListAdapter
         * method
         * */
         RestaurantDetailFragment detailFragment = RestaurantDetailFragment
-                .newInstance(mRestaurants, position);
+                .newInstance(mRestaurants, position, Constants.SOURCE_SAVED);
 
         /*
         * Necessary setup to replace FrameLayout in layout with our detail
