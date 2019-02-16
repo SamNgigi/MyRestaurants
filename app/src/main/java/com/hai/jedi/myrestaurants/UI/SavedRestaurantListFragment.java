@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.OnLifecycleEvent;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -131,9 +133,10 @@ public class SavedRestaurantListFragment
     }
 
     @Override
+    @OnLifecycleEvent( Lifecycle.Event.ON_DESTROY)
     public void onDestroy(){
         super.onDestroy();
-        // mFirebaseAdapter.stopListening();
+        mFirebaseAdapter.cleanup(this);
     }
 
 }
