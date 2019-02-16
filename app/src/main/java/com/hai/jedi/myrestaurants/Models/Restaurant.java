@@ -75,6 +75,10 @@ public class Restaurant {
         return imageUrl;
     }
 
+    public void setImage(String bitmap){
+        this.imageUrl = bitmap;
+    }
+
     public double getLatitude(){
         return latitude;
     }

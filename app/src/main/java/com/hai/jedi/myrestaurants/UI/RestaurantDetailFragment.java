@@ -4,6 +4,7 @@ package com.hai.jedi.myrestaurants.UI;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -48,6 +49,7 @@ import butterknife.ButterKnife;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -141,16 +143,29 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         // Attaching the various Restaurant object properties to the layout/view
         // Loading images with picasso with predefined size and some style edit.
 
+        if(!mRestaurant.getImageUrl().contains("http")){
+            try{
+                Bitmap imgBitMap = decodeFromFirebBase64(mRestaurant.getImageUrl());
+                mImageLabel.setImageBitmap(imgBitMap);
+            } catch (IOException exception){
+                exception.printStackTrace();
+            }
+        }else {
+            Picasso.get().load(mRestaurant
+                    .getImageUrl())
+                    .resize(MAX_WIDTH, MAX_HEIGHT)
+                    .centerCrop()
+                    .into(mImageLabel);
+            nameLabel.setText(mRestaurant.getName());
+            mTagLabel.setText(mRestaurant.getCategories().get(0));
+            mRatingLabel.setText(String.format("Rating: %s/5", mRestaurant.getRating()));
+        }
+
         if(mSource.equals(Constants.SOURCE_SAVED)){
             mSaveRestaurantButton.setVisibility(View.GONE);
         }else {
             mSaveRestaurantButton.setOnClickListener(this);
         }
-
-        Picasso.get().load(mRestaurant.getImageUrl())
-                     .resize(MAX_WIDTH, MAX_HEIGHT)
-                     .centerCrop()
-                     .into(mImageLabel);
 
         nameLabel.setText(mRestaurant.getName());
         mTagLabel.setText(android.text.TextUtils.join(", ", mRestaurant.getCategories()));
@@ -165,6 +180,12 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         addressLabel.setOnClickListener(this);
 
         return view;
+    }
+
+    // Decoding our bitmap image.
+    public static Bitmap decodeFromFirebBase64(String image) throws IOException {
+        byte[] decodeByteArray = android.util.Base64.decode(image, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodeByteArray, 0, decodeByteArray.length);
     }
 
     @Override
@@ -329,12 +350,13 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         // Here use Android's Base64 and not Java's
         String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
 
+        mRestaurant.setImage(imageEncoded);
+
         DatabaseReference reference = FirebaseDatabase.getInstance()
                                         .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
                                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                        .child(mRestaurant.getPushId())
-                                        .child("imageUrl");
-        reference.setValue(imageEncoded);
+                                        .child(mRestaurant.getPushId());
+        reference.setValue(mRestaurant);
     }
 
 }

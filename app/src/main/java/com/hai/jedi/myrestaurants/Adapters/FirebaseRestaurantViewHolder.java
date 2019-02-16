@@ -6,6 +6,9 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +33,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.parceler.Parcels;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -63,15 +67,34 @@ public class FirebaseRestaurantViewHolder
         TextView tagTextView = (TextView) mView.findViewById(R.id.tagTxtView);
         TextView ratingTextView = (TextView) mView.findViewById(R.id.ratingTxtView);
 
-        Picasso.get().load(restaurant
-                .getImageUrl())
-                .resize(MAX_WIDTH, MAX_HEIGHT)
-                .centerCrop()
-                .into(restaurantImageView);
+        if(!restaurant.getImageUrl().contains("http")){
+            try{
+                Bitmap imgBitMap = decodeFromFirebBase64(restaurant.getImageUrl());
+                restaurantImageView.setImageBitmap(imgBitMap);
+            } catch (IOException exception){
+                exception.printStackTrace();
+            }
+        }else {
+            Picasso.get().load(restaurant
+                    .getImageUrl())
+                    .resize(MAX_WIDTH, MAX_HEIGHT)
+                    .centerCrop()
+                    .into(restaurantImageView);
+            nameTextView.setText(restaurant.getName());
+            tagTextView.setText(restaurant.getCategories().get(0));
+            ratingTextView.setText(String.format("Rating: %s/5", restaurant.getRating()));
+        }
 
         nameTextView.setText(restaurant.getName());
         tagTextView.setText(restaurant.getCategories().get(0));
         ratingTextView.setText(String.format("Rating: %s/5", restaurant.getRating()));
+
+
+    }
+
+    public static Bitmap decodeFromFirebBase64(String image) throws  IOException {
+        byte[] decodeByteArray = android.util.Base64.decode(image, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodeByteArray, 0, decodeByteArray.length);
     }
 
     @Override
