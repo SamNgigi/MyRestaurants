@@ -3,6 +3,7 @@ package com.hai.jedi.myrestaurants.UI;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -10,10 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,8 +47,11 @@ import butterknife.ButterKnife;
 
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Objects;
+
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,6 +60,9 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
     // Predefining the size of our images.
     private static final int MAX_WIDTH = 200;
     private static final int MAX_HEIGHT = 200;
+
+    //
+    private static final int REQUEST_IMAGE_CAPTURE = 111;
 
     //Attaching the layout views to our logic
     @BindView(R.id.restaurantImageView) ImageView mImageLabel;
@@ -229,6 +241,100 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
             });
 
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if(mSource.equals(Constants.SOURCE_SAVED)){
+            inflater.inflate(R.menu.menu_photo, menu);
+        } else {
+            inflater.inflate(R.menu.menu_main, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.action_photo:
+                onLaunchCamera();
+            default:
+                break;
+        }
+        return false;
+    }
+
+    public void onLaunchCamera(){
+        /*
+        * We set up out Intent, providing MediaStore.ACTION_IMAGE_CAPTURE  as a param.
+        * This is an implicit intent, that will instruct Android to automatically access the
+        * device's camera.
+        *
+        * MediaStore is a built-in Android class that handles all things media. ACTION_IMAGE_CAPTURE
+        * is the standard intent that accesses the device's camera application
+        * */
+        Intent takePicIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        /*
+        * This conditional statements basically ensures that there is a camera app available
+        * to take pictures.
+        *
+        * This makes sure the app will not crash if there is no camera
+         * */
+        if(takePicIntent.resolveActivity(Objects.requireNonNull(getActivity())
+                .getPackageManager()) != null ){
+            /*
+            * Passing our intent and  indicate we expect a result by using the
+            * startActivityForResult.
+            *
+            * We also pass in our REQUEST_IMAGE_CAPTURE.
+            * This should be an int value. If it is greater than 1, the result of the
+            * action we are launching will be returned automatically in the call back
+            * method onActivityResult.
+            *
+            * This value may also be used to identify specific results when multiple implicit
+            * intents are being triggered and return multiple pieces of info back
+            * */
+            startActivityForResult(takePicIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        /**
+         * @param requestCode represents the REQUEST_IMAGE_CAPTURE value we provided in the
+         *                    startActivityForResult()
+         * @param resultCode - status of the activity, whether is was successful or not.
+         *
+         * @param data - the Intent object that includes intent extras containing the info
+         *             being returned. In this case- our image.
+         * */
+        if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == getActivity().RESULT_OK){
+            // Retrieving the intent content - i.e our image
+            Bundle extras = data.getExtras();
+            // Creating a new Bitmap object
+            Bitmap imgBitMap = (Bitmap) Objects.requireNonNull(extras).get("data");
+            // Setting the our ImageView to contain our imgBitMap image
+            mImageLabel.setImageBitmap(imgBitMap);
+            // Custom method to encode our image in Base64 and save to firebase to persist
+            // the image.
+            encodeBitmapAndSaveToFirebase(imgBitMap);
+        }
+
+    }
+
+    public void encodeBitmapAndSaveToFirebase(Bitmap bitmap){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        // Here use Android's Base64 and not Java's
+        String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+
+        DatabaseReference reference = FirebaseDatabase.getInstance()
+                                        .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                        .child(mRestaurant.getPushId())
+                                        .child("imageUrl");
+        reference.setValue(imageEncoded);
     }
 
 }
