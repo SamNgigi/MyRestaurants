@@ -235,6 +235,9 @@ public class FirebaseRestaurantListAdapter
      */
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
+        // TODO - CODE IS BUGGY HERE. SOMETIMES THE IMAGES GLITCH AND THEY BECOME THE SAME
+        // TODO - IMAGES, MORE RESEARCH TO BE DONE HERE.
+
         DatabaseReference reference1 = getRef(fromPosition);
         DatabaseReference reference2 = getRef(toPosition);
         if (fromPosition < toPosition) {
