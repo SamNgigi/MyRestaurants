@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.firebase.ui.database.ObservableSnapshotArray;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
@@ -46,6 +47,8 @@ public class FirebaseRestaurantListAdapter
     private OnStartDragListener mOnStartDragListener;
     private Context mContext;
 
+    private final ObservableSnapshotArray<Restaurant> mSnapshots;
+
     private ChildEventListener mChildEventListener;
     private ArrayList<Restaurant> mRestaurants = new ArrayList<>();
     /*
@@ -66,6 +69,7 @@ public class FirebaseRestaurantListAdapter
                                          OnStartDragListener onStartDragListener,
                                          Context context) {
         super(options);
+        mSnapshots = options.getSnapshots();
         mRef = reference;
         mOnStartDragListener = onStartDragListener;
         mContext = context;
@@ -235,28 +239,16 @@ public class FirebaseRestaurantListAdapter
      */
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
-        DatabaseReference reference1 = getRef(fromPosition);
-        DatabaseReference reference2 = getRef(toPosition);
+
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
                 Collections.swap(mRestaurants, i, i + 1);
-                Restaurant restaurant_1 = mRestaurants.get(i);
-                restaurant_1.setIndex(Integer.toString(i));
-                reference1.setValue(restaurant_1);
-                Restaurant restaurant_2 = mRestaurants.get(i+1);
-                restaurant_2.setIndex(Integer.toString(i+1));
-                reference2.setValue(restaurant_2);
+
 
             }
         } else {
             for (int i = fromPosition; i > toPosition; i--) {
                 Collections.swap(mRestaurants, i, i - 1);
-                Restaurant restaurant_1 = mRestaurants.get(i);
-                restaurant_1.setIndex(Integer.toString(i));
-                reference1.setValue(restaurant_1);
-                Restaurant restaurant_2 = mRestaurants.get(i-1);
-                restaurant_2.setIndex(Integer.toString(i-1));
-                reference2.setValue(restaurant_2);
             }
         }
 
@@ -288,10 +280,21 @@ public class FirebaseRestaurantListAdapter
         getRef(position).removeValue();
     }
 
+    private void setIndexInFirebase(){
+        for (Restaurant restaurant : mRestaurants){
+            int index = mRestaurants.indexOf(restaurant);
+
+            DatabaseReference reference = mSnapshots.getSnapshot(index).getRef();
+            Log.d("CAN YOU SEE ME", reference.toString());
+            /*DatabaseReference reference = getRef(index);
+            reference.child("index").setValue(Integer.toString(index));*/
+        }
+    }
 
     @Override
     public void stopListening(){
         super.stopListening();
+        setIndexInFirebase();
         mRef.removeEventListener(mChildEventListener);
     }
 
