@@ -11,10 +11,8 @@ import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.View;
 
-import com.firebase.ui.common.ChangeEventType;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.firebase.ui.database.ObservableSnapshotArray;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
@@ -36,9 +34,6 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.view.MotionEventCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.OnLifecycleEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,19 +42,16 @@ public class FirebaseRestaurantListAdapter
         extends FirebaseRecyclerAdapter<Restaurant, FirebaseRestaurantViewHolder>
         implements ItemTouchHelperAdapter {
 
-    private static final String TAG = FirebaseRestaurantListAdapter.class.getSimpleName();
-
     private DatabaseReference mRef;
     private OnStartDragListener mOnStartDragListener;
     private Context mContext;
 
-    private final ObservableSnapshotArray<Restaurant> mSnapshots;
-
+    private ChildEventListener mChildEventListener;
     private ArrayList<Restaurant> mRestaurants = new ArrayList<>();
     /*
-    * Its seems we add our flexible ui logic where we interact with the List
-    * of data.
-    * */
+     * Its seems we add our flexible ui logic where we interact with the List
+     * of data.
+     * */
     private int mOrientation;
 
     /**
@@ -74,103 +66,47 @@ public class FirebaseRestaurantListAdapter
                                          OnStartDragListener onStartDragListener,
                                          Context context) {
         super(options);
-        mSnapshots = options.getSnapshots();
         mRef = reference;
         mOnStartDragListener = onStartDragListener;
         mContext = context;
 
-        if(options.getOwner() != null ){
-            options.getOwner().getLifecycle().addObserver(this);
-        }
+        mChildEventListener = mRef.addChildEventListener(new ChildEventListener(){
 
+            /*
+             * Each time the adapter is constructed, the onChildAdded() will be triggered for each
+             * item in the given reference
+             * */
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String str){
+                /*
+                 * We use the add() method to add each returned item to the mRestaurants ArrayList so
+                 * that we can access the list of restaurants throughout our adapter.
+                 * */
+                mRestaurants.add(dataSnapshot.getValue(Restaurant.class));
+            }
 
-    }
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s){
 
-    @Override
-    @OnLifecycleEvent( Lifecycle.Event.ON_START)
-    public void startListening(){
-        if(!mSnapshots.isListening()){
-            mSnapshots.addChangeEventListener(this);
-        }
-    }
+            }
 
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot){
 
-    @Override
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    public void stopListening(){
-        mSnapshots.removeChangeEventListener(this);
-        notifyDataSetChanged();
-    }
+            }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    public void cleanup(LifecycleOwner source){
-        source.getLifecycle().removeObserver(this);
-    }
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s){
 
-    @Override
-    public void onChildChanged(@NonNull ChangeEventType type,
-                               @NonNull DataSnapshot snapshot,
-                               int newIndex,
-                               int oldIndex){
+            }
 
-        switch(type) {
-            case ADDED:
-                mRestaurants.add(snapshot.getValue(Restaurant.class));
-                notifyItemInserted(newIndex);
-                break;
-            case CHANGED:
-                notifyItemChanged(newIndex);
-                break;
-            case REMOVED:
-                mRestaurants.remove(oldIndex);
-                getRef(oldIndex).removeValue();
-                break;
-            case MOVED:
-                notifyItemMoved(oldIndex, newIndex);
-                break;
-            default:
-                throw new IllegalStateException("Incomplete case statement");
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError){
 
-        }
+            }
 
-    }
+        });
 
-    @Override
-    public void onDataChanged(){
-
-    }
-
-    @Override
-    public void onError(@NonNull DatabaseError error){
-        Log.w(TAG, error.toException());
-    }
-
-    @NonNull
-    @Override
-    public ObservableSnapshotArray<Restaurant> getSnapshots(){
-        return mSnapshots;
-    }
-
-    @NonNull
-    @Override
-    public Restaurant getItem(int position){
-        return mSnapshots.get(position);
-    }
-
-
-    @NonNull
-    @Override
-    public DatabaseReference getRef(int position){
-        return mSnapshots.getSnapshot(position).getRef();
-    }
-
-    @Override
-    public int getItemCount(){
-        /*
-        * If we are listening to mSnapShots return mSnapshots.size()
-        * else return 0;
-        * */
-        return mSnapshots.isListening(this) ? mSnapshots.size() : 0;
     }
 
     /**
@@ -185,7 +121,7 @@ public class FirebaseRestaurantListAdapter
         frViewHolder.bindRestaurant(restaurant);
 
         mOrientation = frViewHolder.itemView.getResources()
-                        .getConfiguration().orientation;
+                .getConfiguration().orientation;
 
         if(mOrientation == Configuration.ORIENTATION_LANDSCAPE){
             createDetailFragment(0);
@@ -235,15 +171,15 @@ public class FirebaseRestaurantListAdapter
 
     private void createDetailFragment(int position) {
         /*
-        * Creating a new RestaurantDetailFragment by calling the newInstance
-        * method
-        * */
+         * Creating a new RestaurantDetailFragment by calling the newInstance
+         * method
+         * */
         RestaurantDetailFragment detailFragment = RestaurantDetailFragment
                 .newInstance(mRestaurants, position, Constants.SOURCE_SAVED);
 
         /*
-        * Necessary setup to replace FrameLayout in layout with our detail
-        * fragment
+         * Necessary setup to replace FrameLayout in layout with our detail
+         * fragment
          * */
         FragmentTransaction fragmentTransaction = ((FragmentActivity) mContext)
                 .getSupportFragmentManager().beginTransaction();
@@ -299,8 +235,18 @@ public class FirebaseRestaurantListAdapter
      */
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
-        DataSnapshot restaurant_1 = mSnapshots.getSnapshot(fromPosition);
-        onChildChanged(ChangeEventType.MOVED, restaurant_1, fromPosition, toPosition);
+        // TODO - CODE IS BUGGY HERE. SOMETIMES THE IMAGES GLITCH AND THEY BECOME THE SAME
+        // TODO - IMAGES, MORE RESEARCH TO BE DONE HERE.
+
+        // Setting the indices based on size of ArrayList
+        // setIndexInFirebase();
+
+        Collections.swap(mRestaurants, fromPosition, toPosition);
+
+        // Setting indices after swap
+        setIndexInFirebase();
+
+        notifyItemMoved(fromPosition, toPosition);
         return false;
 
     }
@@ -324,21 +270,25 @@ public class FirebaseRestaurantListAdapter
          *
          * Note the getRef() method is a firebase ui's FirebaseRecyclerAdapter method.
          * */
-        DataSnapshot restaurant = mSnapshots.getSnapshot(position);
-        onChildChanged(ChangeEventType.REMOVED, restaurant, 0, position );
-
+        mRestaurants.remove(position);
+        getRef(position).removeValue();
     }
 
-    private void setIndexInFirebase(){
-        for (Restaurant restaurant : mRestaurants){
+    public void setIndexInFirebase(){
+        for(Restaurant restaurant : mRestaurants){
             int index = mRestaurants.indexOf(restaurant);
-
+            restaurant.setIndex(Integer.toString(index));
             DatabaseReference reference = getRef(index);
-            Log.d("CAN YOU SEE ME", reference.toString());
-            /*DatabaseReference reference = getRef(index);
-            reference.child("index").setValue(Integer.toString(index));*/
+            reference.setValue(restaurant);
         }
     }
 
+
+
+    @Override
+    public void stopListening(){
+        super.stopListening();
+        mRef.removeEventListener(mChildEventListener);
+    }
 
 }

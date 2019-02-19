@@ -203,7 +203,7 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot){
                     final ArrayList<String> restaurants = new ArrayList<>();
-                    // This loop might be working to slow.
+                    // This loop might be working too slow.
                     // When you save before the api call can check, the same restaurant is persisted
                     // twice.
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()){
@@ -226,6 +226,8 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
                     } else {
                         DatabaseReference pushRef = restaurantRef.push();
                         String pushId = pushRef.getKey();
+                        // Setting index to restaurant when saving.
+                        mRestaurant.setIndex(Integer.toString(restaurants.size()));
                         mRestaurant.setPushId(pushId); // setting pushId to restaurant object
                         pushRef.setValue(mRestaurant);
                         Toast.makeText(getContext(), "Saved", Toast.LENGTH_LONG).show();

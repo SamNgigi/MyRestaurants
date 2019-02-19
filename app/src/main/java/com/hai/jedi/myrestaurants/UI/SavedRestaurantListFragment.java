@@ -136,7 +136,7 @@ public class SavedRestaurantListFragment
     @OnLifecycleEvent( Lifecycle.Event.ON_DESTROY)
     public void onDestroy(){
         super.onDestroy();
-        mFirebaseAdapter.cleanup(this);
+//        mFirebaseAdapter.cleanup(this);
     }
 
 }
