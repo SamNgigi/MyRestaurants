@@ -118,7 +118,7 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         // restaurant and store it to mRestaurant.
         assert getArguments() != null;
         mRestaurants = Parcels.unwrap(getArguments().getParcelable(
-                      Constants.EXTRA_KEY_RESTAURANTS));
+                Constants.EXTRA_KEY_RESTAURANTS));
         mPosition = getArguments().getInt(Constants.EXTRA_KEY_POSITION);
         mRestaurant = mRestaurants.get(mPosition);
         mSource = getArguments().getString(Constants.KEY_SOURCE);
@@ -192,19 +192,19 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
     public void onClick(View view){
         if(view == mUrlLabel){
             Intent webIntent = new Intent(Intent.ACTION_VIEW,
-                                Uri.parse(mRestaurant.getWebsite()));
+                    Uri.parse(mRestaurant.getWebsite()));
             startActivity(webIntent);
         }
         if(view == phoneLabel) {
             Intent phoneIntent = new Intent(Intent.ACTION_DIAL,
-                                Uri.parse("tel: " + mRestaurant.getPhone()));
+                    Uri.parse("tel: " + mRestaurant.getPhone()));
             startActivity(phoneIntent);
         }
         if(view == addressLabel){
             Intent mapIntent = new Intent(Intent.ACTION_VIEW,
-                                Uri.parse("geo: " + mRestaurant.getLatitude()
-                                            + "," + mRestaurant.getLongitude()
-                                            +"?q=(" + mRestaurant.getName() + ")"));
+                    Uri.parse("geo: " + mRestaurant.getLatitude()
+                            + "," + mRestaurant.getLongitude()
+                            +"?q=(" + mRestaurant.getName() + ")"));
             startActivity(mapIntent);
         }
         if(view == mSaveRestaurantButton) {
@@ -214,11 +214,11 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
             String uid = Objects.requireNonNull(user).getUid();
 
             DatabaseReference restaurantRef = FirebaseDatabase
-                                             .getInstance()
-                                             .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
-                                             .child(uid); // We use this method to create node within
-                                                          // the restaurant node to store the given user's
-                                                          // list of restaurants.
+                    .getInstance()
+                    .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
+                    .child(uid); // We use this method to create node within
+            // the restaurant node to store the given user's
+            // list of restaurants.
 
             restaurantRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -229,7 +229,7 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
                     // twice.
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                         restaurants.add(Objects.requireNonNull(snapshot.getValue(Restaurant.class))
-                                   .getName());
+                                .getName());
 
                     }
 
@@ -248,6 +248,7 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
                         DatabaseReference pushRef = restaurantRef.push();
                         String pushId = pushRef.getKey();
                         mRestaurant.setPushId(pushId); // setting pushId to restaurant object
+                        mRestaurant.setIndex(Integer.toString(restaurants.size()));
                         pushRef.setValue(mRestaurant);
                         Toast.makeText(getContext(), "Saved", Toast.LENGTH_LONG).show();
                     }
@@ -287,35 +288,35 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
 
     public void onLaunchCamera(){
         /*
-        * We set up out Intent, providing MediaStore.ACTION_IMAGE_CAPTURE  as a param.
-        * This is an implicit intent, that will instruct Android to automatically access the
-        * device's camera.
-        *
-        * MediaStore is a built-in Android class that handles all things media. ACTION_IMAGE_CAPTURE
-        * is the standard intent that accesses the device's camera application
-        * */
+         * We set up out Intent, providing MediaStore.ACTION_IMAGE_CAPTURE  as a param.
+         * This is an implicit intent, that will instruct Android to automatically access the
+         * device's camera.
+         *
+         * MediaStore is a built-in Android class that handles all things media. ACTION_IMAGE_CAPTURE
+         * is the standard intent that accesses the device's camera application
+         * */
         Intent takePicIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         /*
-        * This conditional statements basically ensures that there is a camera app available
-        * to take pictures.
-        *
-        * This makes sure the app will not crash if there is no camera
+         * This conditional statements basically ensures that there is a camera app available
+         * to take pictures.
+         *
+         * This makes sure the app will not crash if there is no camera
          * */
         if(takePicIntent.resolveActivity(Objects.requireNonNull(getActivity())
                 .getPackageManager()) != null ){
             /*
-            * Passing our intent and  indicate we expect a result by using the
-            * startActivityForResult.
-            *
-            * We also pass in our REQUEST_IMAGE_CAPTURE.
-            * This should be an int value. If it is greater than 1, the result of the
-            * action we are launching will be returned automatically in the call back
-            * method onActivityResult.
-            *
-            * This value may also be used to identify specific results when multiple implicit
-            * intents are being triggered and return multiple pieces of info back
-            * */
+             * Passing our intent and  indicate we expect a result by using the
+             * startActivityForResult.
+             *
+             * We also pass in our REQUEST_IMAGE_CAPTURE.
+             * This should be an int value. If it is greater than 1, the result of the
+             * action we are launching will be returned automatically in the call back
+             * method onActivityResult.
+             *
+             * This value may also be used to identify specific results when multiple implicit
+             * intents are being triggered and return multiple pieces of info back
+             * */
             startActivityForResult(takePicIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
@@ -353,9 +354,9 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         mRestaurant.setImage(imageEncoded);
 
         DatabaseReference reference = FirebaseDatabase.getInstance()
-                                        .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
-                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                        .child(mRestaurant.getPushId());
+                .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(mRestaurant.getPushId());
         reference.setValue(mRestaurant);
     }
 

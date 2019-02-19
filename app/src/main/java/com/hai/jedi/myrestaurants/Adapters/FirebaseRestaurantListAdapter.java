@@ -235,34 +235,9 @@ public class FirebaseRestaurantListAdapter
      */
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
-        // TODO - CODE IS BUGGY HERE. SOMETIMES THE IMAGES GLITCH AND THEY BECOME THE SAME
-        // TODO - IMAGES, MORE RESEARCH TO BE DONE HERE.
-
-        DatabaseReference reference1 = getRef(fromPosition);
-        DatabaseReference reference2 = getRef(toPosition);
-        if (fromPosition < toPosition) {
-            for (int i = fromPosition; i < toPosition; i++) {
-                Collections.swap(mRestaurants, i, i + 1);
-                Restaurant restaurant_1 = mRestaurants.get(i);
-                restaurant_1.setIndex(Integer.toString(i));
-                reference1.setValue(restaurant_1);
-                Restaurant restaurant_2 = mRestaurants.get(i+1);
-                restaurant_2.setIndex(Integer.toString(i+1));
-                reference2.setValue(restaurant_2);
-
-            }
-        } else {
-            for (int i = fromPosition; i > toPosition; i--) {
-                Collections.swap(mRestaurants, i, i - 1);
-                Restaurant restaurant_1 = mRestaurants.get(i);
-                restaurant_1.setIndex(Integer.toString(i));
-                reference1.setValue(restaurant_1);
-                Restaurant restaurant_2 = mRestaurants.get(i-1);
-                restaurant_2.setIndex(Integer.toString(i-1));
-                reference2.setValue(restaurant_2);
-            }
-        }
-
+        // Swaping positions
+        Collections.swap(mRestaurants, fromPosition, toPosition);
+        setIndexInFirebase();
         notifyItemMoved(fromPosition, toPosition);
         return false;
 
@@ -289,6 +264,16 @@ public class FirebaseRestaurantListAdapter
          * */
         mRestaurants.remove(position);
         getRef(position).removeValue();
+    }
+
+    public void setIndexInFirebase(){
+        // Setting new indices to firebase
+        for(Restaurant restaurant : mRestaurants){
+            int index = mRestaurants.indexOf(restaurant);
+            restaurant.setIndex(Integer.toString(index));
+            DatabaseReference reference = getRef(index);
+            reference.setValue(restaurant);
+        }
     }
 
 
